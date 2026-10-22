@@ -1,0 +1,24 @@
+# Keep Plain Secrets Out Of Git (PLAYGROUND) — Playground environment
+# A clean sandbox: it spins up, runs OS prep, then stays running for free
+# exploration. No task, no grading, no `astrona submit`.
+# Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-097-playground-010-01"
+  docs:
+    guide: "docs/overview.md"
+
+bootstrap:
+  init:
+    - name: "prepare"
+      description: "Install flux, sops and age, start Gitea with gitops/fleet seeded with podinfo and a plain Secret, make gitea.localtest.me resolve inside the cluster, install Flux and apply the Flux objects."
+      type: "file"
+      source: "bootstrap/prepare.sh"
+  manifests:
+    - name: "lab-start"
+      description: "Starting workloads (namespace gitea, Gitea Deployment and Service gitea-http, tester client)."
+      type: "file"
+      source: "manifests/lab-start.yaml"
+
+teardown:
+  keepCluster: false

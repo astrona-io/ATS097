@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: podinfo-settings
+  namespace: podinfo
+data:
+  smtp-host: smtp.example.com
+  smtp-password: smtp-in-git

@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# Reference remediation, applied only by `astrona test` (the `testing:` block).
+# `astrona run` never runs this, so the lab stays broken for the student.
+# Taken from solution.md - if one changes, change the other.
+#
+# `astrona test` has no port-forward to Gitea, so the Git changes go through
+# the Gitea API from the tester pod instead of `git push`. The learner makes
+# the same changes with a clone, a commit and a push.
+set -eu
+
+BIN_DIR="/usr/local/bin"
+[ -w "$BIN_DIR" ] || BIN_DIR="$HOME/.local/bin"
+export PATH="$BIN_DIR:$PATH"
+
+GIT_AUTH="gitops:gitops-password"
+GITEA_API="http://gitea-http.gitea:3000/api/v1"
+REPO_PATH="/repos/gitops/fleet"
+
+gitea_call() {
+  # gitea_call METHOD PATH [JSON]: calls the Gitea API from the tester pod and
+  # prints the response body. Fails on an HTTP error.
+  local method="$1" path="$2" body="${3:-}"
+  if [ -n "$body" ]; then
+    printf '%s' "$body" | kubectl -n gitea exec -i deploy/tester -- \
+      curl -fsS -u "$GIT_AUTH" -X "$method" -H 'Content-Type: application/json' \
+      --data-binary @- "$GITEA_API$path"
+  else
+    kubectl -n gitea exec deploy/tester -- \
+      curl -fsS -u "$GIT_AUTH" -X "$method" "$GITEA_API$path"
+  fi
+}
+
+git_read_file() {
+  # git_read_file REPO_FILE: prints the file from branch main, fails if missing.
+  gitea_call GET "$REPO_PATH/raw/$1?ref=main"
+}
+
+git_file_sha() {
+  # git_file_sha REPO_FILE: prints the blob SHA, or nothing if the file is missing.
+  gitea_call GET "$REPO_PATH/contents/$1?ref=main" 2>/dev/null \
+    | kubectl -n gitea exec -i deploy/tester -- jq -r '.sha // empty' 2>/dev/null || true
+}
+
+git_put_file() {
+  # git_put_file REPO_FILE MESSAGE < CONTENT: creates or updates one file on main.
+  local path="$1" message="$2" content sha
+  content="$(base64 | tr -d '\n')"
+  sha="$(git_file_sha "$path")"
+  if [ -n "$sha" ]; then
+    gitea_call PUT "$REPO_PATH/contents/$path" \
+      "{\"content\":\"$content\",\"sha\":\"$sha\",\"message\":\"$message\",\"branch\":\"main\"}" >/dev/null
+  else
+    gitea_call POST "$REPO_PATH/contents/$path" \
+      "{\"content\":\"$content\",\"message\":\"$message\",\"branch\":\"main\"}" >/dev/null
+  fi
+}
+
+git_delete_file() {
+  # git_delete_file REPO_FILE MESSAGE: deletes one file on main, if it exists.
+  local sha
+  sha="$(git_file_sha "$1")"
+  [ -n "$sha" ] || return 0
+  gitea_call DELETE "$REPO_PATH/contents/$1" \
+    "{\"sha\":\"$sha\",\"message\":\"$2\",\"branch\":\"main\"}" >/dev/null
+}
+
+git_head_sha() {
+  # git_head_sha: prints the commit SHA at the tip of main.
+  gitea_call GET "$REPO_PATH/branches/main" \
+    | kubectl -n gitea exec -i deploy/tester -- jq -r '.commit.id'
+}
+
+git_tree_paths() {
+  # git_tree_paths: prints the path of every file on main, one per line.
+  gitea_call GET "$REPO_PATH/git/trees/$(git_head_sha)?recursive=true&per_page=1000" \
+    | kubectl -n gitea exec -i deploy/tester -- jq -r '.tree[] | select(.type == "blob") | .path'
+}
+
+secret_value() {
+  # secret_value NAMESPACE NAME KEY: prints one decoded value of a Secret.
+  kubectl -n "$1" get secret "$2" -o jsonpath="{.data.${3//./\\.}}" 2>/dev/null | base64 -d 2>/dev/null
+}
+
+recipients_in() {
+  # recipients_in < FILE: prints every age recipient listed in a file.
+  grep -oE 'age1[0-9a-z]{58}' | sort -u
+}
+
+recipient_of_identity() {
+  # recipient_of_identity < IDENTITY_FILE: prints the age recipient of each identity.
+  local tmp
+  tmp="$(mktemp)"
+  cat > "$tmp"
+  grep -E '^AGE-SECRET-KEY-1' "$tmp" | while read -r identity; do
+    printf '%s\n' "$identity" | age-keygen -y
+  done
+  rm -f "$tmp"
+}
+
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+
+# 1. A new key pair. The identity goes to the cluster, never to Git.
+age-keygen -o "$WORK/age.agekey" 2>/dev/null
+NEW_RECIPIENT="$(age-keygen -y "$WORK/age.agekey")"
+
+# 2. .sops.yaml names only the new recipient; the Secret gets a new value,
+#    encrypted for the new recipient only.
+cat > "$WORK/.sops.yaml" <<YAML
+creation_rules:
+  - path_regex: .*\.yaml\$
+    encrypted_regex: ^(data|stringData)\$
+    age: $NEW_RECIPIENT
+YAML
+mkdir -p "$WORK/apps/podinfo"
+cat > "$WORK/apps/podinfo/secret.yaml" <<'YAML'
+apiVersion: v1
+kind: Secret
+metadata:
+  name: podinfo-db
+  namespace: podinfo
+type: Opaque
+stringData:
+  password: after-key-rotation
+YAML
+(cd "$WORK" && sops --encrypt --in-place apps/podinfo/secret.yaml)
+
+# 3. Replace the identity in the cluster first, then push, so Flux can decrypt
+#    the new file as soon as it fetches it.
+kubectl -n flux-system create secret generic sops-age \
+  --from-file=age.agekey="$WORK/age.agekey" --dry-run=client -o yaml | kubectl apply -f -
+git_put_file .sops.yaml "Rotate the age recipient" < "$WORK/.sops.yaml"
+git_put_file apps/podinfo/secret.yaml "Rotate the podinfo-db password and its key" < "$WORK/apps/podinfo/secret.yaml"
+flux reconcile kustomization podinfo --with-source --timeout=5m
+kubectl -n podinfo rollout restart deployment/podinfo
+kubectl -n podinfo rollout status deployment/podinfo --timeout=180s

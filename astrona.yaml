@@ -1,0 +1,294 @@
+# Course manifest for ATS097 - Secret Management, SOPS & Webhook Receivers (FluxCD).
+#
+# One entry per section under `modules:`. Each section lists, in order: its
+# README, then for each module the landing page (course.md), its parts
+# (course-0N-*.md), and right after the part a lab tests, the lab's
+# question.md reading and the `type: lab` entry. The module's summary page
+# comes last. The section capstone closes the section. Playgrounds are not
+# listed: the landing page's playground marker shows them. solution.md is
+# never listed.
+#
+# Every `path:` is relative to this file.
+
+training:
+  id: ATS097
+  title: "FluxCD: Secret Management, SOPS & Webhook Receivers"
+  maturity: draft
+  description: >
+    Training material covering the Secret Management, SOPS & Webhook
+    Receivers domain of the FluxCD training path: why a plain Kubernetes
+    Secret cannot go to Git, the options for secrets in GitOps (SOPS, Sealed
+    Secrets, External Secrets Operator), encrypting Secrets with SOPS and age,
+    decryption by kustomize-controller, rotating a leaked key, key management
+    services, and Receivers that make Flux reconcile as soon as Git is pushed.
+    Each module pairs a layered reader with an ungraded hands-on playground
+    and a graded practice lab. Each section closes with an integration
+    capstone.
+    Written for Flux v2.9.6, SOPS 3.13.3 and age 1.3.2.
+
+  certification:
+    name: FluxCD
+    code: FLUX
+    provider: Astrona
+    domain: Secret Management, SOPS & Webhook Receivers
+    weight: 15
+
+modules:
+
+  - id: module-intro
+    title: "Introduction"
+    description: >
+      Start here. What this course trains you to do, how it is laid out, how
+      to get your machine ready with the astrona command-line tool, how the
+      content is written and checked, who maintains it, and how to report a
+      mistake.
+
+    content:
+      - type: reading
+        title: Introduction
+        path: sections/intro/README.md
+      - type: reading
+        title: "Welcome To The Course"
+        path: sections/intro/course-01-welcome.md
+      - type: reading
+        title: "Get Your Machine Ready"
+        path: sections/intro/course-02-get-your-machine-ready.md
+      - type: reading
+        title: "How This Course Is Made"
+        path: sections/intro/course-03-how-this-course-is-made.md
+
+  - id: module-010
+    title: "Secrets In GitOps"
+    description: >
+      Why a Kubernetes Secret in Git is a published password, what Git
+      history does to a committed secret, the options for secrets in GitOps
+      and when each fits, and how to take a committed secret out of Git and
+      rotate it without breaking the application.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-010/README.md
+
+      - type: reading
+        title: "Keep Plain Secrets Out Of Git"
+        path: sections/section-010/module-01/course.md
+      - type: reading
+        title: "Why A Plain Secret Cannot Go To Git"
+        path: sections/section-010/module-01/course-01-why-plain-secrets-cannot-go-to-git.md
+      - type: reading
+        title: "The Options For Secrets In GitOps"
+        path: sections/section-010/module-01/course-02-options-for-secrets-in-gitops.md
+      - type: reading
+        title: "Removing A Secret That Was Committed"
+        path: sections/section-010/module-01/course-03-removing-a-committed-secret.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Remove A Plain Secret From Git Lab"
+        path: sections/section-010/module-01/labs/lab-01
+        difficulty: beginner
+        estimated_duration: 20m
+        topic: secrets-in-git
+        task_kind: troubleshooting
+        tags: [kubernetes-secret, base64, git-history, secret-rotation, prune, kustomization]
+        learning_goals:
+          - Find a plain Secret in Git and in Git history and read its value
+          - Remove the Secret from Git without leaving the application without it
+          - Rotate the exposed value and prove the new value is in the cluster and not in Git
+        resources:
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/
+          - name: "Kustomization API: prune"
+            url: https://fluxcd.io/flux/components/kustomize/kustomizations/#prune
+      - type: reading
+        title: Summary
+        path: sections/section-010/module-01/course-04-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-010/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Clean Every Credential Out Of The Repository Capstone"
+        path: sections/section-010/capstone/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: secrets-in-git
+        task_kind: troubleshooting
+        tags: [kubernetes-secret, base64, git-history, secret-rotation, prune, kustomization]
+        learning_goals:
+          - Find every credential in a repository, including one in a ConfigMap and one Base64-encoded
+          - Remove them from Git while the application keeps running
+          - Rotate every exposed value and prove none of the new values is in Git
+        resources:
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/
+          - name: "Kustomization API"
+            url: https://fluxcd.io/flux/components/kustomize/kustomizations/
+
+  - id: module-020
+    title: "SOPS With age"
+    description: >
+      Encrypting Kubernetes Secrets with SOPS and an age key on your own
+      machine, the .sops.yaml creation rules, what stays readable in an
+      encrypted file, decryption by kustomize-controller with the sops-age
+      Secret, rotating a leaked key, and key management services.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-020/README.md
+
+      - type: reading
+        title: "Encrypt Secrets With SOPS And age"
+        path: sections/section-020/module-01/course.md
+      - type: reading
+        title: "age Keys And Recipients"
+        path: sections/section-020/module-01/course-01-age-keys-and-recipients.md
+      - type: reading
+        title: "Encrypting A Secret With SOPS"
+        path: sections/section-020/module-01/course-02-encrypting-with-sops.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Encrypt A Secret For Git Lab"
+        path: sections/section-020/module-01/labs/lab-01
+        difficulty: beginner
+        estimated_duration: 20m
+        topic: sops-encryption
+        task_kind: build
+        tags: [sops, age, sops-config, encrypted-regex, age-recipient, kubernetes-secret]
+        learning_goals:
+          - Write a .sops.yaml creation rule for a team age recipient
+          - Encrypt a Kubernetes Secret so only its values are encrypted
+          - Commit the encrypted file and prove the team identity decrypts it
+        resources:
+          - name: "Manage Kubernetes secrets with SOPS: age"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/#encrypting-secrets-using-age
+          - name: "SOPS documentation"
+            url: https://getsops.io/docs/
+      - type: reading
+        title: Summary
+        path: sections/section-020/module-01/course-03-summary.md
+
+      - type: reading
+        title: "Let Flux Decrypt Secrets In The Cluster"
+        path: sections/section-020/module-02/course.md
+      - type: reading
+        title: "Decryption In kustomize-controller"
+        path: sections/section-020/module-02/course-01-decryption-in-kustomize-controller.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Make Flux Decrypt Secrets Lab"
+        path: sections/section-020/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: sops-decryption
+        task_kind: troubleshooting
+        tags: [decryption, sops-age-secret, kustomization, sops, flux-events, flux-reconcile]
+        learning_goals:
+          - Find why an encrypted Secret in Git does not reach the cluster with its real value
+          - Give kustomize-controller the age identity and turn on SOPS decryption
+          - Prove the cluster holds the decrypted value while Git holds only the encrypted file
+        resources:
+          - name: "Kustomization API: decryption"
+            url: https://fluxcd.io/flux/components/kustomize/kustomizations/#decryption
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/
+      - type: reading
+        title: "Rotating Keys And Using A KMS"
+        path: sections/section-020/module-02/course-02-key-rotation-and-kms.md
+      - type: reading
+        title: Summary
+        path: sections/section-020/module-02/course-03-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-020/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Rotate A Leaked age Key Capstone"
+        path: sections/section-020/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: key-rotation
+        task_kind: migration
+        tags: [age, updatekeys, sops-config, sops-age-secret, secret-rotation, decryption]
+        learning_goals:
+          - Replace a leaked age key in .sops.yaml, in the encrypted file and in the cluster
+          - Rotate the exposed value, because Git history still holds files the old key decrypts
+          - Prove Flux decrypts the new value with the new key only
+        resources:
+          - name: "SOPS documentation: updatekeys and rotate"
+            url: https://getsops.io/docs/
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/
+
+  - id: module-030
+    title: "Webhook Receivers"
+    description: >
+      Why polling Git on an interval is slow, the Receiver API and its types,
+      the webhook path and the token that protects it, and connecting a Git
+      server's push webhook to a Receiver so Flux reconciles within seconds.
+
+    content:
+      - type: reading
+        title: Section Overview
+        path: sections/section-030/README.md
+
+      - type: reading
+        title: "Reconcile On Push With A Receiver"
+        path: sections/section-030/module-01/course.md
+      - type: reading
+        title: "Polling, Webhooks And The Receiver API"
+        path: sections/section-030/module-01/course-01-polling-and-receivers.md
+      - type: reading
+        title: "Connecting A Git Server To A Receiver"
+        path: sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Reconcile On Every Push Lab"
+        path: sections/section-030/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: receivers
+        task_kind: build
+        tags: [receiver, webhook, hmac, gitea-webhook, webhook-path, interval]
+        learning_goals:
+          - Create a Receiver with a token Secret for the GitRepository fleet
+          - Add a push webhook in the Git server that calls the Receiver's webhook path
+          - Prove a push reaches the cluster within seconds while the interval stays one hour
+        resources:
+          - name: "Receiver API"
+            url: https://fluxcd.io/flux/components/notification/receivers/
+          - name: "Setup webhook receivers"
+            url: https://fluxcd.io/flux/guides/webhook-receivers/
+      - type: reading
+        title: Summary
+        path: sections/section-030/module-01/course-03-summary.md
+
+      - type: reading
+        title: Question
+        path: sections/section-030/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Deliver A Rotated Secret Without Waiting Capstone"
+        path: sections/section-030/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: receivers
+        task_kind: troubleshooting
+        tags: [receiver, hmac, gitea-webhook, sops, decryption, secret-rotation]
+        learning_goals:
+          - Find why pushes no longer reach the cluster from the Receiver status and the webhook deliveries
+          - Fix the Receiver and the webhook so they share a token and name the right GitRepository
+          - Rotate an encrypted Secret in Git and prove it reaches the cluster within seconds
+        resources:
+          - name: "Receiver API"
+            url: https://fluxcd.io/flux/components/notification/receivers/
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/

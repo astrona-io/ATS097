@@ -1,0 +1,59 @@
+# Deliver A Rotated Secret Without Waiting
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-097-capstone-030"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+
+bootstrap:
+  init:
+    - name: "install-git-and-flux"
+      description: "Installs flux 2.9.6, sops 3.13.3 and age 1.3.2, Gitea with the repository gitops/fleet, the CoreDNS rewrite and the Flux controllers"
+      type: "file"
+      source: "bootstrap/01-install-git-and-flux.sh"
+    - name: "ats-097-capstone-030-setup"
+      description: "Commits an encrypted podinfo-db Secret that Flux decrypts with sops-age, sets the GitRepository interval to one hour, and creates a Receiver for the wrong GitRepository plus a Gitea webhook with a different secret than the Receiver's token."
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+
+testing:
+  init:
+    - name: "wait-for-flux"
+      description: "Waits until Gitea and every Flux controller are available"
+      type: "file"
+      source: "testing/wait-for-flux.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+
+validation:
+  scripts:
+    - name: "validate-receiver"
+      description: "Confirms the Receiver gitea-receiver reconciles the GitRepository fleet and is Ready"
+      type: "file"
+      source: "validation/validate-receiver.sh"
+    - name: "validate-interval-unchanged"
+      description: "Confirms the GitRepository fleet still polls every 30 minutes or less often"
+      type: "file"
+      source: "validation/validate-interval-unchanged.sh"
+    - name: "validate-secret-delivered"
+      description: "Confirms the cluster holds the rotated password and Git holds it only encrypted"
+      type: "file"
+      source: "validation/validate-secret-delivered.sh"
+    - name: "validate-no-identity-in-git"
+      description: "Confirms no age identity is committed"
+      type: "file"
+      source: "validation/validate-no-identity-in-git.sh"
+    - name: "validate-push-reaches-cluster"
+      description: "Pushes a commit and confirms source-controller fetches it within a minute"
+      type: "file"
+      source: "validation/validate-push-reaches-cluster.sh"
+
+teardown:
+  keepCluster: false
