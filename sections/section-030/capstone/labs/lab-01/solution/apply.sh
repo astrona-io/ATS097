@@ -101,12 +101,14 @@ recipient_of_identity() {
 kubectl -n flux-system patch receiver gitea-receiver --type=json \
   -p '[{"op":"replace","path":"/spec/resources/0/name","value":"fleet"}]'
 
-# 2. The Gitea webhook must sign with the Receiver's token.
+# 2. The Gitea webhook must sign with the Receiver's token. Gitea ignores a
+# new config.secret in a PATCH, so delete the webhook and create it again.
 TOKEN="$(secret_value flux-system receiver-token token)"
 HOOK_PATH="$(kubectl -n flux-system get receiver gitea-receiver -o jsonpath='{.status.webhookPath}')"
 HOOK_ID="$(gitea_call GET "$REPO_PATH/hooks" | kubectl -n gitea exec -i deploy/tester -- jq -r '.[0].id')"
-gitea_call PATCH "$REPO_PATH/hooks/$HOOK_ID" \
-  "{\"active\":true,\"config\":{\"url\":\"http://webhook-receiver.flux-system.svc.cluster.local$HOOK_PATH\",\"content_type\":\"json\",\"secret\":\"$TOKEN\"}}" >/dev/null
+gitea_call DELETE "$REPO_PATH/hooks/$HOOK_ID" >/dev/null
+gitea_call POST "$REPO_PATH/hooks" \
+  "{\"type\":\"gitea\",\"active\":true,\"events\":[\"push\"],\"branch_filter\":\"*\",\"config\":{\"url\":\"http://webhook-receiver.flux-system.svc.cluster.local$HOOK_PATH\",\"content_type\":\"json\",\"secret\":\"$TOKEN\"}}" >/dev/null
 
 # 3. Rotate the password in Git, encrypted for the recipient in .sops.yaml.
 WORK="$(mktemp -d)"

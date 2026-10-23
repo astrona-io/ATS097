@@ -26,7 +26,9 @@ kubectl -n flux-system patch receiver gitea-receiver --type=json \
 
 The Receiver object is not in Git in this lab, so a patch is enough. In a repository where Flux applies the Receiver from Git, change it in Git instead.
 
-## Step 4: Fix the webhook secret
+## Step 4: Replace the webhook
+
+Gitea does not change a webhook's secret through the API: a `PATCH` with a new `config.secret` answers `200`, but the webhook keeps signing with the old secret. So delete the webhook and create it again with the right secret.
 
 Read the token and the webhook path, and find the webhook's number:
 
@@ -36,11 +38,21 @@ HOOK_PATH="$(kubectl -n flux-system get receiver gitea-receiver -o jsonpath='{.s
 curl -s -u gitops:gitops-password http://gitea.localtest.me:3000/api/v1/repos/gitops/fleet/hooks | jq '.[] | .id'
 ```
 
-Save this as `webhook-fleet.json`, with the full address (`http://webhook-receiver.flux-system.svc.cluster.local` followed by `$HOOK_PATH`) and the token in place of the placeholders:
+Delete it, with its number in place of `<HOOK_ID>`:
+
+```sh
+curl -s -o /dev/null -w '%{http_code}\n' -u gitops:gitops-password -X DELETE \
+  http://gitea.localtest.me:3000/api/v1/repos/gitops/fleet/hooks/<HOOK_ID>
+```
+
+Gitea answers `204`. Save this as `webhook-fleet.json`, with the full address (`http://webhook-receiver.flux-system.svc.cluster.local` followed by `$HOOK_PATH`) and the token in place of the placeholders:
 
 ```json
 {
+  "type": "gitea",
   "active": true,
+  "events": ["push"],
+  "branch_filter": "*",
   "config": {
     "url": "<WEBHOOK_ADDRESS>",
     "content_type": "json",
@@ -49,11 +61,11 @@ Save this as `webhook-fleet.json`, with the full address (`http://webhook-receiv
 }
 ```
 
-Send it to the webhook, with its number in place of `<HOOK_ID>`:
+Create the new webhook:
 
 ```sh
-curl -s -u gitops:gitops-password -X PATCH -H 'Content-Type: application/json' \
-  --data @webhook-fleet.json http://gitea.localtest.me:3000/api/v1/repos/gitops/fleet/hooks/<HOOK_ID> | jq '.config.url'
+curl -s -u gitops:gitops-password -H 'Content-Type: application/json' \
+  --data @webhook-fleet.json http://gitea.localtest.me:3000/api/v1/repos/gitops/fleet/hooks | jq '.id, .config.url'
 ```
 
 ## Step 5: Rotate the password in Git
