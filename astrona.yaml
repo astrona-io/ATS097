@@ -30,8 +30,6 @@ training:
     name: FluxCD
     code: FLUX
     provider: Astrona
-    domain: Secret Management, SOPS & Webhook Receivers
-    weight: 15
 
 modules:
 
