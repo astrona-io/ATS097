@@ -243,3 +243,233 @@ questions:
         explanation: "Correct. The source revision shows whether the fetch happened."
     correct_option: d
     explanation: "Correct. The source revision shows whether the fetch happened."
+
+  - id: ats097-030-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Separate the generic types"
+    source_readings:
+      - sections/section-030/module-02/course-01-how-each-receiver-type-validates-a-request.md
+    prompt: "Which Receiver type verifies a signature of the request body?"
+    options:
+      - id: a
+        text: "`generic`"
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "Both check nothing"
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "None of them can"
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "`generic-hmac`"
+        explanation: "Correct. `generic` accepts any request to the path."
+    correct_option: d
+    explanation: "Correct. `generic` accepts any request to the path."
+
+  - id: ats097-030-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the signature"
+    source_readings:
+      - sections/section-030/module-02/course-02-sending-a-signed-request-by-hand.md
+    prompt: "What does the `generic-hmac` signature header carry?"
+    options:
+      - id: a
+        text: "An HMAC-SHA256 of the request body, computed with the token."
+        explanation: "Correct. A changed body gives a different signature."
+      - id: b
+        text: "The token in plain text."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The name of the GitRepository."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "The Base64 form of the body."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. A changed body gives a different signature."
+
+  - id: ats097-030-q13
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Find the webhook path"
+    source_readings:
+      - sections/section-030/module-01/course-03-reading-receiver-status-and-troubleshooting-delivery.md
+    prompt: "Where do you read the path to put in the Git server's webhook address?"
+    options:
+      - id: a
+        text: "In the token Secret."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "In `.status.webhookPath` of the Receiver."
+        explanation: "Correct. The path changes when the token changes."
+      - id: c
+        text: "In the Service annotations."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "In the GitRepository spec."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. The path changes when the token changes."
+
+  - id: ats097-030-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the key of the token Secret"
+    source_readings:
+      - sections/section-030/module-01/course-04-rotating-the-token-and-choosing-the-interval.md
+    prompt: "Which key does the Receiver's token Secret use?"
+    options:
+      - id: a
+        text: "`secret`"
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`webhook`"
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "`token`"
+        explanation: "Correct. The Receiver reads the key named `token`."
+      - id: d
+        text: "`password`"
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. The Receiver reads the key named `token`."
+
+  - id: ats097-030-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the Service"
+    source_readings:
+      - sections/section-030/module-03/course-01-the-service-and-the-network-path-inside-the-cluster.md
+    prompt: "Which Service in `flux-system` fronts the receiver?"
+    options:
+      - id: a
+        text: "`notification-controller`, port 443."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`flux-receiver`, port 9292."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "`source-controller`, port 80."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "`webhook-receiver`, port 80."
+        explanation: "Correct. The Service forwards to port 9292 of notification-controller."
+    correct_option: d
+    explanation: "Correct. The Service forwards to port 9292 of notification-controller."
+
+  - id: ats097-030-q16
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Expose the path"
+    source_readings:
+      - sections/section-030/module-03/course-02-exposing-the-webhook-outside-the-cluster.md
+    prompt: "What does an Ingress for the receiver route?"
+    options:
+      - id: a
+        text: "The path under `/hook/` to the `webhook-receiver` Service."
+        explanation: "Correct. Exposing a narrow path limits the surface."
+      - id: b
+        text: "Every path of the cluster to notification-controller."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Port 9292 to the Git server."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Only the root path."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. Exposing a narrow path limits the surface."
+
+  - id: ats097-030-q17
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Prefer a signing type"
+    source_readings:
+      - sections/section-030/module-03/course-03-limiting-who-can-call-it.md
+    prompt: "Which choice limits who can trigger a reconcile best?"
+    options:
+      - id: a
+        text: "The `generic` type with a long path."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "A type that signs requests, with source-address limits at the Ingress."
+        explanation: "Correct. The path is not a secret on its own."
+      - id: c
+        text: "A short interval on the GitRepository."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "A public path with no token."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. The path is not a secret on its own."
+
+  - id: ats097-030-q18
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Add an OCIRepository"
+    source_readings:
+      - sections/section-030/module-04/course-01-sources-other-than-git.md
+    prompt: "Can a Receiver list an `OCIRepository` in `spec.resources`?"
+    options:
+      - id: a
+        text: "No. Only a GitRepository can be listed."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "Yes, but only with type `generic`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Yes. A call then reconciles that source."
+        explanation: "Correct. Other kinds include Bucket and HelmRepository."
+      - id: d
+        text: "No. An OCIRepository polls only."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. Other kinds include Bucket and HelmRepository."
+
+  - id: ats097-030-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Filter events"
+    source_readings:
+      - sections/section-030/module-02/course-03-choosing-events-and-resources.md
+    prompt: "What does `spec.events` do on a Receiver?"
+    options:
+      - id: a
+        text: "It sets the event type of the notification sent to Slack."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "It limits the namespaces."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "It sets the interval."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "It lists the event types the Receiver accepts, such as `ping` or `push`."
+        explanation: "Correct. A request with another event is ignored."
+    correct_option: d
+    explanation: "Correct. A request with another event is ignored."
+
+  - id: ats097-030-q20
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Select resources with CEL"
+    source_readings:
+      - sections/section-030/module-04/course-03-registry-types-and-filters.md
+    prompt: "What does `spec.resourceFilter` hold?"
+    options:
+      - id: a
+        text: "A CEL expression that decides which listed resources are reconciled for a request."
+        explanation: "Correct. It is evaluated for each listed resource."
+      - id: b
+        text: "A regular expression for the path."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "A label selector for nodes."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "A list of allowed IP addresses."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. It is evaluated for each listed resource."

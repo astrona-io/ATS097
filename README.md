@@ -26,9 +26,9 @@ contains:
 
 | Section | Title | Modules | Labs | Topic |
 | --- | --- | --- | --- | --- |
-| [010](sections/section-010) | Secrets In GitOps | 1 | 1 + capstone | The problem and the options |
-| [020](sections/section-020) | SOPS With age | 2 | 2 + capstone | Encryption and decryption |
-| [030](sections/section-030) | Webhook Receivers | 1 | 1 + capstone | Reconciling on push |
+| [010](sections/section-010) | Secrets In GitOps | 4 | 1 + capstone | The problem, the options, Sealed Secrets, External Secrets Operator, Secrets Flux reads |
+| [020](sections/section-020) | SOPS With age | 4 | 2 + capstone | Encryption, decryption, KMS and PGP, Helm values and tenants |
+| [030](sections/section-030) | Webhook Receivers | 4 | 1 + capstone | Reconciling on push, receiver types, exposure, other sources |
 
 The order follows the problem. Section 010 shows why a Secret cannot go to Git
 in plain text and what a committed one costs. Section 020 encrypts Secrets with
@@ -41,10 +41,18 @@ a rotated Secret, reach the cluster within seconds.
 
 | Module | Reader | Parts | Labs |
 | --- | --- | --- | --- |
-| 010-01 | [Keep Plain Secrets Out Of Git](sections/section-010/module-01/course.md) | 3 | [lab-01](sections/section-010/module-01/labs/lab-01) |
-| 020-01 | [Encrypt Secrets With SOPS And age](sections/section-020/module-01/course.md) | 2 | [lab-01](sections/section-020/module-01/labs/lab-01) |
-| 020-02 | [Let Flux Decrypt Secrets In The Cluster](sections/section-020/module-02/course.md) | 2 | [lab-01](sections/section-020/module-02/labs/lab-01) |
-| 030-01 | [Reconcile On Push With A Receiver](sections/section-030/module-01/course.md) | 2 | [lab-01](sections/section-030/module-01/labs/lab-01) |
+| 010-01 | [Keep Plain Secrets Out Of Git](sections/section-010/module-01/course.md) | 5 | [lab-01](sections/section-010/module-01/labs/lab-01) |
+| 010-02 | [Sealed Secrets With Flux](sections/section-010/module-02/course.md) | 4 | none yet |
+| 010-03 | [External Secrets Operator With Flux](sections/section-010/module-03/course.md) | 4 | none yet |
+| 010-04 | [Secrets That Flux Itself Consumes](sections/section-010/module-04/course.md) | 4 | none yet |
+| 020-01 | [Encrypt Secrets With SOPS And age](sections/section-020/module-01/course.md) | 4 | [lab-01](sections/section-020/module-01/labs/lab-01) |
+| 020-02 | [Let Flux Decrypt Secrets In The Cluster](sections/section-020/module-02/course.md) | 4 | [lab-01](sections/section-020/module-02/labs/lab-01) |
+| 020-03 | [SOPS With KMS And PGP](sections/section-020/module-03/course.md) | 4 | none yet |
+| 020-04 | [SOPS With Helm Values And Tenants](sections/section-020/module-04/course.md) | 4 | none yet |
+| 030-01 | [Reconcile On Push With A Receiver](sections/section-030/module-01/course.md) | 4 | [lab-01](sections/section-030/module-01/labs/lab-01) |
+| 030-02 | [Receiver Types And Request Validation](sections/section-030/module-02/course.md) | 4 | none yet |
+| 030-03 | [Exposing The Receiver To The Internet](sections/section-030/module-03/course.md) | 4 | none yet |
+| 030-04 | [Receivers For Charts, Images And Artifacts](sections/section-030/module-04/course.md) | 4 | none yet |
 
 ---
 

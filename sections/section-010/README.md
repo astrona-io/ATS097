@@ -14,7 +14,7 @@ This section shows the problem on a real repository, compares the ways GitOps te
 
 ## The learning path
 
-The section has one module. It has a landing page, three short parts, a graded lab right after the part it tests, and a summary. The landing page starts the module's playground.
+The section has four modules: keeping plain Secrets out of Git, Sealed Secrets, the External Secrets Operator, and the Secrets that Flux itself reads. Each has a landing page, four or five parts, and a summary. The landing page starts the module's playground. The first module also has a graded lab right after the part it tests.
 
 ### 1. Keep Plain Secrets Out Of Git
 

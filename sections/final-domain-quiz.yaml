@@ -217,3 +217,209 @@ questions:
         explanation: "Not correct. That removes the signature check."
     correct_option: a
     explanation: "Correct. The path depends on the token."
+  - id: ats097-final-q10
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name what decrypts a SealedSecret"
+    source_readings:
+      - sections/section-010/module-02/course-01-how-sealed-secrets-works.md
+    prompt: "Flux applies a `SealedSecret` from Git. What turns it into a Kubernetes Secret?"
+    options:
+      - id: a
+        text: "kustomize-controller, using the age identity."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`kubeseal`, running inside the Flux pod."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The Sealed Secrets controller, using the private key it holds in the cluster."
+        explanation: "Correct. Flux only applies the object. The controller decrypts it."
+      - id: d
+        text: "The Kubernetes API server, which decrypts every custom resource."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. Flux only applies the object. The controller decrypts it."
+
+  - id: ats097-final-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Say what Git holds with the operator"
+    source_readings:
+      - sections/section-010/module-03/course-01-how-the-external-secrets-operator-works.md
+    prompt: "With the External Secrets Operator, what does the Git repository hold?"
+    options:
+      - id: a
+        text: "The value, encrypted with the operator's public key."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The value, encoded in Base64."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "A SOPS-encrypted copy of the value."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "An `ExternalSecret` that references the value in the store."
+        explanation: "Correct. Git holds a reference only. The value stays in the store."
+    correct_option: d
+    explanation: "Correct. Git holds a reference only. The value stays in the store."
+
+  - id: ats097-final-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain where a substituted value ends up"
+    source_readings:
+      - sections/section-010/module-04/course-02-substitution-from-secrets.md
+    prompt: "A Kustomization uses `postBuild.substituteFrom` with a Secret. Where does the value appear after the apply?"
+    options:
+      - id: a
+        text: "Inside the applied object, for example in a Deployment environment variable."
+        explanation: "Correct. Anyone who can read the applied object can read the value."
+      - id: b
+        text: "Only inside the Secret, never in other objects."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Only in the Flux logs."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Nowhere, because the placeholder stays."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. Anyone who can read the applied object can read the value."
+
+  - id: ats097-final-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the SOPS data key"
+    source_readings:
+      - sections/section-020/module-03/course-01-the-key-types-sops-supports.md
+    prompt: "A SOPS file is encrypted for an age recipient and a KMS key. How is it built?"
+    options:
+      - id: a
+        text: "The values are encrypted twice, once for each key."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "One data key encrypts the values, and that data key is wrapped once for each key."
+        explanation: "Correct. Either key can unwrap the data key."
+      - id: c
+        text: "The KMS key encrypts the file names and age encrypts the values."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "The file holds both private keys."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. Either key can unwrap the data key."
+
+  - id: ats097-final-q14
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know what `updatekeys` cannot do"
+    source_readings:
+      - sections/section-020/module-03/course-04-mixing-and-migrating-keys.md
+    prompt: "You remove a leaked recipient with `sops updatekeys`. What is still true?"
+    options:
+      - id: a
+        text: "The leaked key can decrypt the new file."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The file can no longer be decrypted by anyone."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Old commits in Git history can still be decrypted with the leaked key."
+        explanation: "Correct. Rotate the exposed values as well."
+      - id: d
+        text: "The data key is the same as before and is hidden."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. Rotate the exposed values as well."
+
+  - id: ats097-final-q15
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Fill a Helm value from a decrypted Secret"
+    source_readings:
+      - sections/section-020/module-04/course-01-helm-values-from-a-decrypted-secret.md
+    prompt: "Which `HelmRelease` field puts one value from a Secret into a chart path?"
+    options:
+      - id: a
+        text: "`values.secret`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`postBuild.substitute`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "`chart.spec.secretRef`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "`valuesFrom` with `valuesKey` and `targetPath`."
+        explanation: "Correct. `valuesFrom` reads ConfigMaps and Secrets."
+    correct_option: d
+    explanation: "Correct. `valuesFrom` reads ConfigMaps and Secrets."
+
+  - id: ats097-final-q16
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Separate the generic types"
+    source_readings:
+      - sections/section-030/module-02/course-01-how-each-receiver-type-validates-a-request.md
+    prompt: "Which Receiver type verifies a signature of the request body?"
+    options:
+      - id: a
+        text: "`generic-hmac`"
+        explanation: "Correct. `generic` accepts any request to the path."
+      - id: b
+        text: "`generic`"
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Both check nothing"
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "None of them can"
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. `generic` accepts any request to the path."
+
+  - id: ats097-final-q17
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Expose the path"
+    source_readings:
+      - sections/section-030/module-03/course-02-exposing-the-webhook-outside-the-cluster.md
+    prompt: "What does an Ingress for the receiver route?"
+    options:
+      - id: a
+        text: "Every path of the cluster to notification-controller."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The path under `/hook/` to the `webhook-receiver` Service."
+        explanation: "Correct. Exposing a narrow path limits the surface."
+      - id: c
+        text: "Port 9292 to the Git server."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Only the root path."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. Exposing a narrow path limits the surface."
+
+  - id: ats097-final-q18
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Select resources with CEL"
+    source_readings:
+      - sections/section-030/module-04/course-03-registry-types-and-filters.md
+    prompt: "What does `spec.resourceFilter` hold?"
+    options:
+      - id: a
+        text: "A regular expression for the path."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "A label selector for nodes."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "A CEL expression that decides which listed resources are reconciled for a request."
+        explanation: "Correct. It is evaluated for each listed resource."
+      - id: d
+        text: "A list of allowed IP addresses."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. It is evaluated for each listed resource."

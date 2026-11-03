@@ -6,7 +6,7 @@ SOPS is a command-line tool that encrypts the values in a YAML or JSON file and 
 
 Keep one sentence in mind: **the recipient encrypts and may be shared, the identity decrypts and never goes to Git.** Every mistake that leaks an encrypted Secret comes back to that sentence.
 
-The module has two parts. **age Keys And Recipients** creates an age key pair and shows what each half does. **Encrypting A Secret With SOPS** writes the creation rules in `.sops.yaml`, encrypts a Secret, reads what stays readable, and commits it. A graded lab follows the second part.
+The module has four parts. **age Keys And Recipients** creates an age key pair and shows what each half does. **Encrypting A Secret With SOPS** writes the creation rules in `.sops.yaml`, encrypts a Secret, reads what stays readable, and commits it. A graded lab follows the second part. **SOPS Creation Rules In Depth** covers rule order, which values to encrypt and key groups. **Editing, Rotating And Verifying Encrypted Files** covers changing values and recipients and the MAC.
 
 ## Learning objectives
 
@@ -18,6 +18,8 @@ After this module you can:
 - Write a `.sops.yaml` creation rule with `path_regex`, `encrypted_regex` and an `age` recipient.
 - Encrypt a Kubernetes Secret with `sops --encrypt --in-place`, and say which parts stay readable.
 - Decrypt and edit an encrypted file with `sops`, using `SOPS_AGE_KEY_FILE`.
+- Order creation rules, choose between `encrypted_regex` and the suffix settings, and use several recipients and key groups.
+- Change a value with `sops edit` and `sops set`, change recipients with `updatekeys`, and explain what the MAC protects.
 
 ## Before you start
 

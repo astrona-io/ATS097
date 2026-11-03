@@ -6,7 +6,7 @@ kustomize-controller, the Flux controller that builds and applies a Flux `Kustom
 
 Keep one sentence in mind: **Git holds the encrypted file, the cluster holds the identity, and kustomize-controller brings them together at apply time.** The decrypted value exists only in the Kubernetes Secret, never in Git and never in the artifact source-controller stores.
 
-The module has two parts. **Decryption In kustomize-controller** gives the controller the age identity and turns on decryption, and a graded lab follows it. **Rotating Keys And Using A KMS** replaces a key without a gap and shows how a key management service removes the key file altogether.
+The module has four parts. **Decryption In kustomize-controller** gives the controller the age identity and turns on decryption, and a graded lab follows it. **Rotating Keys And Using A KMS** replaces a key without a gap and shows how a key management service removes the key file altogether. **Troubleshooting Decryption Failures** separates the four usual causes of a failed decryption. **Decryption Settings In Detail** lists the fields, the key names and the rules for what is decrypted.
 
 ## Learning objectives
 
@@ -18,6 +18,8 @@ After this module you can:
 - Turn on decryption with `spec.decryption.provider: sops` and `spec.decryption.secretRef`.
 - Add and remove recipients with `sops updatekeys`, and create a new data key with `sops rotate`.
 - Explain how SOPS and Flux use AWS KMS, Google Cloud KMS, Azure Key Vault and HashiCorp Vault instead of an age identity.
+- Tell the four usual causes of a failed decryption apart from the Kustomization message and the identity Secret.
+- Explain which files kustomize-controller decrypts and what the applied Secret contains.
 
 ## Before you start
 

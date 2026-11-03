@@ -6,7 +6,7 @@ A webhook is a request that one system sends to another when an event happens. G
 
 Keep one sentence in mind: **the interval is the safety net, the webhook is the trigger.** Flux still polls, but a push no longer has to wait for the next poll.
 
-The module has two parts. **Polling, Webhooks And The Receiver API** explains the Receiver object, its types, its token and its webhook path. **Connecting A Git Server To A Receiver** creates a Receiver, adds a push webhook in Gitea and proves the effect with a push. A graded lab follows the second part.
+The module has four parts. **Polling, Webhooks And The Receiver API** explains the Receiver object, its types, its token and its webhook path. **Connecting A Git Server To A Receiver** creates a Receiver, adds a push webhook in Gitea and proves the effect with a push. A graded lab follows the second part. **Reading Receiver Status And Troubleshooting Delivery** finds a broken delivery from the records each system keeps. **Rotating The Token And Choosing The Interval** replaces the token and sets the polling interval.
 
 ## Learning objectives
 
@@ -18,6 +18,8 @@ After this module you can:
 - Explain how the `github` and `generic-hmac` types check an HMAC signature, and why the `generic` type is weaker.
 - Create a token Secret and a Receiver, and add a Gitea push webhook that calls it inside the cluster.
 - Prove that a push reaches source-controller within seconds while the interval stays one hour.
+- Find a failed delivery from the Receiver status, the notification-controller log and the Git server's delivery list.
+- Rotate the token, update the webhook and trigger a reconcile by hand.
 
 ## Before you start
 

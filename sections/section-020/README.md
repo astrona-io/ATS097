@@ -18,6 +18,8 @@ This section first encrypts a Secret on your own machine, then gives the cluster
 
 Work through the modules in order. Each module has a landing page, short parts, a graded lab right after the part it tests, and a summary. Each landing page starts the module's playground.
 
+The section has four modules. Modules 1 and 2 have graded labs. Modules 3 and 4 have readings and playgrounds: SOPS with KMS and PGP, and SOPS with Helm values and tenants.
+
 ### 1. Encrypt Secrets With SOPS And age
 
 The playground runs `podinfo` from `gitops/fleet`, with its Secret created outside Git. You create your own age key pair and encrypt a Secret for it.

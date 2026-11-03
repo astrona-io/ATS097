@@ -6,7 +6,7 @@ A Kubernetes Secret is an object that holds small sensitive values. Its `data` v
 
 Keep one sentence in mind: **a secret that reached Git is a published secret, and the only real fix is a new value.** Removing the file is necessary, but Git keeps every old version, so the old value stays readable in history.
 
-The module has three parts. **Why A Plain Secret Cannot Go To Git** reads the password from the repository, from Git history and from the cluster. **The Options For Secrets In GitOps** compares SOPS, Sealed Secrets and External Secrets Operator. **Removing A Secret That Was Committed** takes the Secret out of Git while `podinfo` keeps running and rotates the password. A graded lab follows the third part.
+The module has five parts. **Why A Plain Secret Cannot Go To Git** reads the password from the repository, from Git history and from the cluster. **The Options For Secrets In GitOps** compares SOPS, Sealed Secrets and External Secrets Operator. **Removing A Secret That Was Committed** takes the Secret out of Git while `podinfo` keeps running and rotates the password. A graded lab follows the third part. **Finding Secrets Before They Are Committed** searches history and scans for credentials. **Rewriting History And Rotating After A Leak** orders the response to a leak.
 
 ## Learning objectives
 
@@ -18,6 +18,8 @@ After this module you can:
 - Predict what Flux does when a Secret it applied leaves Git while `prune: true` is set.
 - Remove a committed Secret, recreate it outside Git with a new value, and restart the application.
 - Check that a Secret no longer comes from Git, using the inventory of the Flux `Kustomization`.
+- Search Git history for a string and scan a repository for credentials, and block a commit with a pre-commit hook.
+- Respond to a leak in order: rotate, deliver the new value, rewrite history with `git filter-repo`, and make every clone start again.
 
 ## Before you start
 

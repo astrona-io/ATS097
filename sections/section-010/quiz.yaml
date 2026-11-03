@@ -243,3 +243,233 @@ questions:
         explanation: "Correct. Running pods keep working, new pods wait."
     correct_option: d
     explanation: "Correct. Running pods keep working, new pods wait."
+
+  - id: ats097-010-q11
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name what decrypts a SealedSecret"
+    source_readings:
+      - sections/section-010/module-02/course-01-how-sealed-secrets-works.md
+    prompt: "Flux applies a `SealedSecret` from Git. What turns it into a Kubernetes Secret?"
+    options:
+      - id: a
+        text: "kustomize-controller, using the age identity."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`kubeseal`, running inside the Flux pod."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The Kubernetes API server, which decrypts every custom resource."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "The Sealed Secrets controller, using the private key it holds in the cluster."
+        explanation: "Correct. Flux only applies the object. The controller decrypts it."
+    correct_option: d
+    explanation: "Correct. Flux only applies the object. The controller decrypts it."
+
+  - id: ats097-010-q12
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the strict scope"
+    source_readings:
+      - sections/section-010/module-02/course-03-scopes-and-names.md
+    prompt: "A strict `SealedSecret` is renamed in Git and applied. What happens?"
+    options:
+      - id: a
+        text: "The controller cannot decrypt it, because the name is part of what was sealed."
+        explanation: "Correct. Strict scope binds a value to its name and namespace."
+      - id: b
+        text: "It decrypts normally, because the namespace is unchanged."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "It decrypts, and the new name is used for the Secret."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Flux rejects the commit before the controller sees it."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. Strict scope binds a value to its name and namespace."
+
+  - id: ats097-010-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "State what to back up"
+    source_readings:
+      - sections/section-010/module-02/course-04-the-controller-key-rotation-and-backup.md
+    prompt: "What must you back up to restore every `SealedSecret` on a new cluster?"
+    options:
+      - id: a
+        text: "The `SealedSecret` files in Git."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The key Secrets with the label `sealedsecrets.bitnami.com/sealed-secrets-key`."
+        explanation: "Correct. Git already holds the sealed files. Only the private keys can open them."
+      - id: c
+        text: "The public certificate from `kubeseal --fetch-cert`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "The `HelmRelease` of the controller."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. Git already holds the sealed files. Only the private keys can open them."
+
+  - id: ats097-010-q14
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Explain what key renewal does"
+    source_readings:
+      - sections/section-010/module-02/course-04-the-controller-key-rotation-and-backup.md
+    prompt: "The controller renews its key every 30 days. Does this protect files already in Git history from someone who holds an old private key?"
+    options:
+      - id: a
+        text: "Yes. The controller re-encrypts every old file in Git."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "Yes. The old key is deleted at renewal."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "No. Renewal changes the key for new sealing, and old files stay readable with the old key."
+        explanation: "Correct. Renewal does not rewrite history."
+      - id: d
+        text: "No. Old files stop working at renewal, so nothing is exposed."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. Renewal does not rewrite history."
+
+  - id: ats097-010-q15
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Say what Git holds with the operator"
+    source_readings:
+      - sections/section-010/module-03/course-01-how-the-external-secrets-operator-works.md
+    prompt: "With the External Secrets Operator, what does the Git repository hold?"
+    options:
+      - id: a
+        text: "The value, encrypted with the operator's public key."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The value, encoded in Base64."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "A SOPS-encrypted copy of the value."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "An `ExternalSecret` that references the value in the store."
+        explanation: "Correct. Git holds a reference only. The value stays in the store."
+    correct_option: d
+    explanation: "Correct. Git holds a reference only. The value stays in the store."
+
+  - id: ats097-010-q16
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Use the refresh interval"
+    source_readings:
+      - sections/section-010/module-03/course-03-templates-refresh-and-ownership.md
+    prompt: "The value in the secret store changes. How does the Kubernetes Secret follow?"
+    options:
+      - id: a
+        text: "The operator reads the store again at `spec.refreshInterval` and updates the Secret."
+        explanation: "Correct. The refresh loop needs no commit."
+      - id: b
+        text: "Only after you commit a change to the `ExternalSecret`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Only after you restart the operator."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "It does not. The Secret is created once."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. The refresh loop needs no commit."
+
+  - id: ats097-010-q17
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Order the operator before its resources"
+    source_readings:
+      - sections/section-010/module-03/course-04-using-it-next-to-flux.md
+    prompt: "Why does the `secrets-config` Kustomization use `dependsOn` for the operator's Kustomization?"
+    options:
+      - id: a
+        text: "So the operator can read the Git credentials."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "So the operator's CRDs exist before the `ExternalSecret` objects are applied."
+        explanation: "Correct. Applying a custom resource before its CRD exists fails."
+      - id: c
+        text: "So Flux encrypts the `ExternalSecret` files."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "So both run in the same namespace."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. Applying a custom resource before its CRD exists fails."
+
+  - id: ats097-010-q18
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the keys of a Git credential Secret"
+    source_readings:
+      - sections/section-010/module-04/course-01-credentials-for-sources.md
+    prompt: "Which keys does a `GitRepository` Secret use for Git over HTTPS?"
+    options:
+      - id: a
+        text: "`identity` and `known_hosts`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`token` and `webhook`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "`username` and `password`, where the password is usually a token."
+        explanation: "Correct. `identity` and `known_hosts` are for SSH."
+      - id: d
+        text: "`.dockerconfigjson` only."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. `identity` and `known_hosts` are for SSH."
+
+  - id: ats097-010-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain where a substituted value ends up"
+    source_readings:
+      - sections/section-010/module-04/course-02-substitution-from-secrets.md
+    prompt: "A Kustomization uses `postBuild.substituteFrom` with a Secret. Where does the value appear after the apply?"
+    options:
+      - id: a
+        text: "Only inside the Secret, never in other objects."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "Only in the Flux logs."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Nowhere, because the placeholder stays."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Inside the applied object, for example in a Deployment environment variable."
+        explanation: "Correct. Anyone who can read the applied object can read the value."
+    correct_option: d
+    explanation: "Correct. Anyone who can read the applied object can read the value."
+
+  - id: ats097-010-q20
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Judge `secretGenerator` for real secrets"
+    source_readings:
+      - sections/section-010/module-04/course-04-generated-secrets-and-their-limits.md
+    prompt: "A `kustomization.yaml` has a `secretGenerator` with `literals: [password=hunter2]`. What is the problem?"
+    options:
+      - id: a
+        text: "The literal is stored in Git in plain form, because kustomize reads it when it builds."
+        explanation: "Correct. Generated Secrets are fine for non-sensitive values only."
+      - id: b
+        text: "The Secret is created without a name."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The hash suffix exposes the password."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Flux refuses to apply generated Secrets."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. Generated Secrets are fine for non-sensitive values only."

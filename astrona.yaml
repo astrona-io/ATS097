@@ -67,7 +67,6 @@ modules:
       - type: reading
         title: Section Overview
         path: sections/section-010/README.md
-
       - type: reading
         title: "Keep Plain Secrets Out Of Git"
         path: sections/section-010/module-01/course.md
@@ -101,9 +100,68 @@ modules:
           - name: "Kustomization API: prune"
             url: https://fluxcd.io/flux/components/kustomize/kustomizations/#prune
       - type: reading
-        title: Summary
-        path: sections/section-010/module-01/course-04-summary.md
-
+        title: "Finding Secrets Before They Are Committed"
+        path: sections/section-010/module-01/course-04-finding-secrets-before-they-are-committed.md
+      - type: reading
+        title: "Rewriting History And Rotating After A Leak"
+        path: sections/section-010/module-01/course-05-rewriting-history-and-rotating-after-a-leak.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-01/course-06-summary.md
+      - type: reading
+        title: "Sealed Secrets With Flux"
+        path: sections/section-010/module-02/course.md
+      - type: reading
+        title: "How Sealed Secrets Works"
+        path: sections/section-010/module-02/course-01-how-sealed-secrets-works.md
+      - type: reading
+        title: "Install The Controller And Seal A Secret"
+        path: sections/section-010/module-02/course-02-install-the-controller-and-seal-a-secret.md
+      - type: reading
+        title: "Scopes And Names"
+        path: sections/section-010/module-02/course-03-scopes-and-names.md
+      - type: reading
+        title: "The Controller Key: Rotation And Backup"
+        path: sections/section-010/module-02/course-04-the-controller-key-rotation-and-backup.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-02/course-05-summary.md
+      - type: reading
+        title: "External Secrets Operator With Flux"
+        path: sections/section-010/module-03/course.md
+      - type: reading
+        title: "How The External Secrets Operator Works"
+        path: sections/section-010/module-03/course-01-how-the-external-secrets-operator-works.md
+      - type: reading
+        title: "Install The Operator And Read From A Store"
+        path: sections/section-010/module-03/course-02-install-the-operator-and-read-from-a-store.md
+      - type: reading
+        title: "Templates, Refresh And Ownership"
+        path: sections/section-010/module-03/course-03-templates-refresh-and-ownership.md
+      - type: reading
+        title: "Using It Next To Flux"
+        path: sections/section-010/module-03/course-04-using-it-next-to-flux.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-03/course-05-summary.md
+      - type: reading
+        title: "Secrets That Flux Itself Consumes"
+        path: sections/section-010/module-04/course.md
+      - type: reading
+        title: "Credentials For Sources"
+        path: sections/section-010/module-04/course-01-credentials-for-sources.md
+      - type: reading
+        title: "Substitution From Secrets"
+        path: sections/section-010/module-04/course-02-substitution-from-secrets.md
+      - type: reading
+        title: "Helm Values From Secrets"
+        path: sections/section-010/module-04/course-03-helm-values-from-secrets.md
+      - type: reading
+        title: "Generated Secrets And Their Limits"
+        path: sections/section-010/module-04/course-04-generated-secrets-and-their-limits.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-04/course-05-summary.md
       - type: reading
         title: Question
         path: sections/section-010/capstone/labs/lab-01/question.md
@@ -141,7 +199,6 @@ modules:
       - type: reading
         title: Section Overview
         path: sections/section-020/README.md
-
       - type: reading
         title: "Encrypt Secrets With SOPS And age"
         path: sections/section-020/module-01/course.md
@@ -172,9 +229,14 @@ modules:
           - name: "SOPS documentation"
             url: https://getsops.io/docs/
       - type: reading
-        title: Summary
-        path: sections/section-020/module-01/course-03-summary.md
-
+        title: "SOPS Creation Rules In Depth"
+        path: sections/section-020/module-01/course-03-sops-creation-rules-in-depth.md
+      - type: reading
+        title: "Editing, Rotating And Verifying Encrypted Files"
+        path: sections/section-020/module-01/course-04-editing-rotating-and-verifying-encrypted-files.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-01/course-05-summary.md
       - type: reading
         title: "Let Flux Decrypt Secrets In The Cluster"
         path: sections/section-020/module-02/course.md
@@ -205,9 +267,50 @@ modules:
         title: "Rotating Keys And Using A KMS"
         path: sections/section-020/module-02/course-02-key-rotation-and-kms.md
       - type: reading
-        title: Summary
-        path: sections/section-020/module-02/course-03-summary.md
-
+        title: "Troubleshooting Decryption Failures"
+        path: sections/section-020/module-02/course-03-troubleshooting-decryption-failures.md
+      - type: reading
+        title: "Decryption Settings In Detail"
+        path: sections/section-020/module-02/course-04-decryption-settings-in-detail.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-02/course-05-summary.md
+      - type: reading
+        title: "SOPS With KMS And PGP"
+        path: sections/section-020/module-03/course.md
+      - type: reading
+        title: "The Key Types SOPS Supports"
+        path: sections/section-020/module-03/course-01-the-key-types-sops-supports.md
+      - type: reading
+        title: "Cloud KMS And Vault With Flux"
+        path: sections/section-020/module-03/course-02-cloud-kms-and-vault-with-flux.md
+      - type: reading
+        title: "PGP End To End"
+        path: sections/section-020/module-03/course-03-pgp-end-to-end.md
+      - type: reading
+        title: "Mixing And Migrating Keys"
+        path: sections/section-020/module-03/course-04-mixing-and-migrating-keys.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-03/course-05-summary.md
+      - type: reading
+        title: "SOPS With Helm Values And Tenants"
+        path: sections/section-020/module-04/course.md
+      - type: reading
+        title: "Helm Values From A Decrypted Secret"
+        path: sections/section-020/module-04/course-01-helm-values-from-a-decrypted-secret.md
+      - type: reading
+        title: "Choosing What To Encrypt"
+        path: sections/section-020/module-04/course-02-choosing-what-to-encrypt.md
+      - type: reading
+        title: "One Key For Each Tenant"
+        path: sections/section-020/module-04/course-03-one-key-for-each-tenant.md
+      - type: reading
+        title: "Layout And Ordering"
+        path: sections/section-020/module-04/course-04-layout-and-ordering.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-04/course-05-summary.md
       - type: reading
         title: Question
         path: sections/section-020/capstone/labs/lab-01/question.md
@@ -244,7 +347,6 @@ modules:
       - type: reading
         title: Section Overview
         path: sections/section-030/README.md
-
       - type: reading
         title: "Reconcile On Push With A Receiver"
         path: sections/section-030/module-01/course.md
@@ -275,9 +377,68 @@ modules:
           - name: "Setup webhook receivers"
             url: https://fluxcd.io/flux/guides/webhook-receivers/
       - type: reading
-        title: Summary
-        path: sections/section-030/module-01/course-03-summary.md
-
+        title: "Reading Receiver Status And Troubleshooting Delivery"
+        path: sections/section-030/module-01/course-03-reading-receiver-status-and-troubleshooting-delivery.md
+      - type: reading
+        title: "Rotating The Token And Choosing The Interval"
+        path: sections/section-030/module-01/course-04-rotating-the-token-and-choosing-the-interval.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-01/course-05-summary.md
+      - type: reading
+        title: "Receiver Types And Request Validation"
+        path: sections/section-030/module-02/course.md
+      - type: reading
+        title: "How Each Receiver Type Validates A Request"
+        path: sections/section-030/module-02/course-01-how-each-receiver-type-validates-a-request.md
+      - type: reading
+        title: "Sending A Signed Request By Hand"
+        path: sections/section-030/module-02/course-02-sending-a-signed-request-by-hand.md
+      - type: reading
+        title: "Choosing Events And Resources"
+        path: sections/section-030/module-02/course-03-choosing-events-and-resources.md
+      - type: reading
+        title: "Receivers As Code"
+        path: sections/section-030/module-02/course-04-receivers-as-code.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-02/course-05-summary.md
+      - type: reading
+        title: "Exposing The Receiver To The Internet"
+        path: sections/section-030/module-03/course.md
+      - type: reading
+        title: "The Service And The Network Path Inside The Cluster"
+        path: sections/section-030/module-03/course-01-the-service-and-the-network-path-inside-the-cluster.md
+      - type: reading
+        title: "Exposing The Webhook Outside The Cluster"
+        path: sections/section-030/module-03/course-02-exposing-the-webhook-outside-the-cluster.md
+      - type: reading
+        title: "Limiting Who Can Call It"
+        path: sections/section-030/module-03/course-03-limiting-who-can-call-it.md
+      - type: reading
+        title: "Debugging Delivery Layer By Layer"
+        path: sections/section-030/module-03/course-04-debugging-delivery-layer-by-layer.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-03/course-05-summary.md
+      - type: reading
+        title: "Receivers For Charts, Images And Artifacts"
+        path: sections/section-030/module-04/course.md
+      - type: reading
+        title: "Sources Other Than Git"
+        path: sections/section-030/module-04/course-01-sources-other-than-git.md
+      - type: reading
+        title: "Reconciling An OCIRepository On Push"
+        path: sections/section-030/module-04/course-02-reconciling-an-ocirepository-on-push.md
+      - type: reading
+        title: "Registry Types And Filters"
+        path: sections/section-030/module-04/course-03-registry-types-and-filters.md
+      - type: reading
+        title: "Many Resources, One Receiver"
+        path: sections/section-030/module-04/course-04-many-resources-one-receiver.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-04/course-05-summary.md
       - type: reading
         title: Question
         path: sections/section-030/capstone/labs/lab-01/question.md

@@ -243,3 +243,233 @@ questions:
         explanation: "Correct. Every recipient needs a matching identity."
     correct_option: d
     explanation: "Correct. Every recipient needs a matching identity."
+
+  - id: ats097-020-q11
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the SOPS data key"
+    source_readings:
+      - sections/section-020/module-03/course-01-the-key-types-sops-supports.md
+    prompt: "A SOPS file is encrypted for an age recipient and a KMS key. How is it built?"
+    options:
+      - id: a
+        text: "The values are encrypted twice, once for each key."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The KMS key encrypts the file names and age encrypts the values."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The file holds both private keys."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "One data key encrypts the values, and that data key is wrapped once for each key."
+        explanation: "Correct. Either key can unwrap the data key."
+    correct_option: d
+    explanation: "Correct. Either key can unwrap the data key."
+
+  - id: ats097-020-q12
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Prefer workload identity"
+    source_readings:
+      - sections/section-020/module-03/course-02-cloud-kms-and-vault-with-flux.md
+    prompt: "What is the benefit of workload identity for a cloud KMS key?"
+    options:
+      - id: a
+        text: "Flux needs no stored credential, because the service account maps to a cloud role."
+        explanation: "Correct. A stored credential is a secret to protect."
+      - id: b
+        text: "The KMS key is stored in Git encrypted."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The age key is no longer needed anywhere."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Decryption becomes faster."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. A stored credential is a secret to protect."
+
+  - id: ats097-020-q13
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Give Flux a PGP private key"
+    source_readings:
+      - sections/section-020/module-03/course-03-pgp-end-to-end.md
+    prompt: "In the decryption Secret, what is the name rule for a PGP private key?"
+    options:
+      - id: a
+        text: "The key name ends in `.agekey`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The key name ends in `.asc`."
+        explanation: "Correct. An age identity ends in `.agekey`."
+      - id: c
+        text: "The key name must be `identity`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "The key name must be `pgp`."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. An age identity ends in `.agekey`."
+
+  - id: ats097-020-q14
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Name the age key rule"
+    source_readings:
+      - sections/section-020/module-01/course-04-editing-rotating-and-verifying-encrypted-files.md
+    prompt: "What does `sops --rotate` do to a file?"
+    options:
+      - id: a
+        text: "It changes the age recipient."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "It decrypts the file in Git."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "It generates a new data key and encrypts the values with it."
+        explanation: "Correct. Changing recipients is `sops updatekeys`."
+      - id: d
+        text: "It deletes the old file."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. Changing recipients is `sops updatekeys`."
+
+  - id: ats097-020-q15
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Know what `updatekeys` cannot do"
+    source_readings:
+      - sections/section-020/module-03/course-04-mixing-and-migrating-keys.md
+    prompt: "You remove a leaked recipient with `sops updatekeys`. What is still true?"
+    options:
+      - id: a
+        text: "The leaked key can decrypt the new file."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The file can no longer be decrypted by anyone."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "The data key is the same as before and is hidden."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "Old commits in Git history can still be decrypted with the leaked key."
+        explanation: "Correct. Rotate the exposed values as well."
+    correct_option: d
+    explanation: "Correct. Rotate the exposed values as well."
+
+  - id: ats097-020-q16
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Choose what to encrypt"
+    source_readings:
+      - sections/section-020/module-01/course-03-sops-creation-rules-in-depth.md
+    prompt: "What does `encrypted_regex: ^(data|stringData)$` do in a creation rule?"
+    options:
+      - id: a
+        text: "It encrypts only the values under `data` and `stringData`."
+        explanation: "Correct. The rest of the file stays readable."
+      - id: b
+        text: "It encrypts the whole file."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "It hides the key names."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "It decrypts those keys on commit."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. The rest of the file stays readable."
+
+  - id: ats097-020-q17
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Fill a Helm value from a decrypted Secret"
+    source_readings:
+      - sections/section-020/module-04/course-01-helm-values-from-a-decrypted-secret.md
+    prompt: "Which `HelmRelease` field puts one value from a Secret into a chart path?"
+    options:
+      - id: a
+        text: "`values.secret`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "`valuesFrom` with `valuesKey` and `targetPath`."
+        explanation: "Correct. `valuesFrom` reads ConfigMaps and Secrets."
+      - id: c
+        text: "`postBuild.substitute`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "`chart.spec.secretRef`."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: b
+    explanation: "Correct. `valuesFrom` reads ConfigMaps and Secrets."
+
+  - id: ats097-020-q18
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Separate tenants"
+    source_readings:
+      - sections/section-020/module-04/course-03-one-key-for-each-tenant.md
+    prompt: "Two tenants share one age key in one Kustomization. What is the risk?"
+    options:
+      - id: a
+        text: "Flux cannot decrypt any file."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "The files are decrypted twice."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "Each tenant can decrypt the other's files with the shared identity."
+        explanation: "Correct. Use one Kustomization and one key for each tenant."
+      - id: d
+        text: "SOPS refuses to encrypt."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: c
+    explanation: "Correct. Use one Kustomization and one key for each tenant."
+
+  - id: ats097-020-q19
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Troubleshoot a decryption failure"
+    source_readings:
+      - sections/section-020/module-02/course-03-troubleshooting-decryption-failures.md
+    prompt: "A Secret does not arrive. Where do you read the decryption error first?"
+    options:
+      - id: a
+        text: "In the Kubernetes node logs."
+        explanation: "Not correct. See the reading for the difference."
+      - id: b
+        text: "In the Git server access log."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "In the Receiver status."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "In the status conditions of the Flux `Kustomization`."
+        explanation: "Correct. `flux get kustomization` shows the message."
+    correct_option: d
+    explanation: "Correct. `flux get kustomization` shows the message."
+
+  - id: ats097-020-q20
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Set the decryption provider"
+    source_readings:
+      - sections/section-020/module-02/course-04-decryption-settings-in-detail.md
+    prompt: "Which field turns on SOPS decryption in a Kustomization?"
+    options:
+      - id: a
+        text: "`spec.decryption.provider: sops`."
+        explanation: "Correct. `spec.decryption.secretRef` names the key Secret."
+      - id: b
+        text: "`spec.sops: true`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: c
+        text: "`spec.postBuild.decrypt`."
+        explanation: "Not correct. See the reading for the difference."
+      - id: d
+        text: "`spec.suspend: false`."
+        explanation: "Not correct. See the reading for the difference."
+    correct_option: a
+    explanation: "Correct. `spec.decryption.secretRef` names the key Secret."
