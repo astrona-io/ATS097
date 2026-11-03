@@ -1,0 +1,245 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats097-020
+course_id: ATS097
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-020
+  title: "SOPS With age"
+placement:
+  position: after
+  reading: sections/section-020/capstone/labs/lab-01/question.md
+questions:
+  - id: ats097-020-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Tell the two halves of an age key pair apart"
+    source_readings:
+      - sections/section-020/module-01/course-01-age-keys-and-recipients.md
+    prompt: "Which half of an age key pair can you safely commit to Git?"
+    options:
+      - id: a
+        text: "The recipient, the public key that starts with `age1`."
+        explanation: "Correct. It can only encrypt."
+      - id: b
+        text: "The identity, the private key that starts with `AGE-SECRET-KEY-1`."
+        explanation: "Not correct. The identity decrypts and must never leave a safe place."
+      - id: c
+        text: "Both, because the file name ends in `.agekey`."
+        explanation: "Not correct. The ending only helps Flux find the identity."
+      - id: d
+        text: "Neither. Both halves must stay outside Git."
+        explanation: "Not correct. The recipient is meant to be shared."
+    correct_option: a
+    explanation: "Correct. It can only encrypt."
+
+  - id: ats097-020-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Recall which command prints a recipient"
+    source_readings:
+      - sections/section-020/module-01/course-01-age-keys-and-recipients.md
+    prompt: "You have the identity file `age.agekey`. Which command prints its recipient?"
+    options:
+      - id: a
+        text: "`age -d -i age.agekey`"
+        explanation: "Not correct. That decrypts a file with the identity."
+      - id: b
+        text: "`age-keygen -y age.agekey`"
+        explanation: "Correct. It reads an identity and prints its recipient."
+      - id: c
+        text: "`sops --encrypt age.agekey`"
+        explanation: "Not correct. That encrypts a file."
+      - id: d
+        text: "`age -r age.agekey`"
+        explanation: "Not correct. `-r` expects a recipient, not an identity file."
+    correct_option: b
+    explanation: "Correct. It reads an identity and prints its recipient."
+
+  - id: ats097-020-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what each half does"
+    source_readings:
+      - sections/section-020/module-01/course-01-age-keys-and-recipients.md
+    prompt: "Alice sends an encrypted message to Bob with `age -r`. What does Alice need, and what does Bob need to decrypt it?"
+    options:
+      - id: a
+        text: "Alice needs Bob's identity. Bob needs his recipient."
+        explanation: "Not correct. The halves have the opposite jobs."
+      - id: b
+        text: "Both need the same identity file."
+        explanation: "Not correct. age uses a key pair, not a shared secret."
+      - id: c
+        text: "Alice needs Bob's recipient. Bob needs his identity."
+        explanation: "Correct. The recipient encrypts and the identity decrypts."
+      - id: d
+        text: "Alice needs her own identity. Bob needs Alice's recipient."
+        explanation: "Not correct. Alice encrypts for Bob, so she needs Bob's recipient."
+    correct_option: c
+    explanation: "Correct. The recipient encrypts and the identity decrypts."
+
+  - id: ats097-020-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what `encrypted_regex` does"
+    source_readings:
+      - sections/section-020/module-01/course-02-encrypting-with-sops.md
+    prompt: "What does `encrypted_regex: ^(data|stringData)$` do in a SOPS creation rule?"
+    options:
+      - id: a
+        text: "It encrypts every key in the file, including the Secret name."
+        explanation: "Not correct. That is what happens without the setting."
+      - id: b
+        text: "It limits the rule to files in the folder `secrets/`."
+        explanation: "Not correct. `path_regex` does that."
+      - id: c
+        text: "It names the recipient that the file is encrypted for."
+        explanation: "Not correct. The `age` field does that."
+      - id: d
+        text: "It encrypts only the values under `data` and `stringData` and leaves the rest readable."
+        explanation: "Correct. `kind` and `metadata` stay readable."
+    correct_option: d
+    explanation: "Correct. `kind` and `metadata` stay readable."
+
+  - id: ats097-020-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Describe the SOPS data key"
+    source_readings:
+      - sections/section-020/module-01/course-02-encrypting-with-sops.md
+    prompt: "What is the data key that SOPS creates for each file?"
+    options:
+      - id: a
+        text: "The age identity of the person who ran SOPS."
+        explanation: "Not correct. The identity is a separate file."
+      - id: b
+        text: "A random key that encrypts the values and is itself stored encrypted for each recipient."
+        explanation: "Correct. It is kept in the `sops:` block."
+      - id: c
+        text: "A fixed key stored in `.sops.yaml`."
+        explanation: "Not correct. SOPS creates a new key for each file."
+      - id: d
+        text: "A hash of all values that detects changes by hand."
+        explanation: "Not correct. That is the MAC."
+    correct_option: b
+    explanation: "Correct. It is kept in the `sops:` block."
+
+  - id: ats097-020-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict the result of editing an encrypted value by hand"
+    source_readings:
+      - sections/section-020/module-01/course-02-encrypting-with-sops.md
+    prompt: "You change the `ENC[...]` text of a value with a text editor and save the file. What happens?"
+    options:
+      - id: a
+        text: "SOPS encrypts the new text the next time it runs."
+        explanation: "Not correct. SOPS does not repair hand edits."
+      - id: b
+        text: "Nothing. SOPS ignores the MAC when the recipient is the same."
+        explanation: "Not correct. The MAC check always runs."
+      - id: c
+        text: "The MAC no longer matches and the file cannot be decrypted."
+        explanation: "Correct. Always edit through `sops`."
+      - id: d
+        text: "The file is decrypted with the old data key."
+        explanation: "Not correct. The check fails first."
+    correct_option: c
+    explanation: "Correct. Always edit through `sops`."
+
+  - id: ats097-020-q07
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the component that decrypts in the cluster"
+    source_readings:
+      - sections/section-020/module-02/course-01-decryption-in-kustomize-controller.md
+    prompt: "Which Flux component decrypts a SOPS-encrypted Secret before it is applied?"
+    options:
+      - id: a
+        text: "source-controller"
+        explanation: "Not correct. It stores the artifact still encrypted."
+      - id: b
+        text: "notification-controller"
+        explanation: "Not correct. It serves Receivers and alerts."
+      - id: c
+        text: "The Kubernetes API server"
+        explanation: "Not correct. It stores the Secret but does not know SOPS."
+      - id: d
+        text: "kustomize-controller"
+        explanation: "Correct. It decrypts just before it applies the objects."
+    correct_option: d
+    explanation: "Correct. It decrypts just before it applies the objects."
+
+  - id: ats097-020-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the correct decryption settings"
+    source_readings:
+      - sections/section-020/module-02/course-01-decryption-in-kustomize-controller.md
+    prompt: "Which settings on the Flux `Kustomization` turn on SOPS decryption with the Secret `sops-age`?"
+    options:
+      - id: a
+        text: "`spec.decryption.provider: sops` and `spec.decryption.secretRef.name: sops-age`"
+        explanation: "Correct. The Secret must be in the same namespace."
+      - id: b
+        text: "`spec.sourceRef.name: sops-age`"
+        explanation: "Not correct. `sourceRef` names the source, not the key."
+      - id: c
+        text: "`spec.prune: sops`"
+        explanation: "Not correct. `prune` takes true or false."
+      - id: d
+        text: "`spec.suspend: false` and `spec.interval: sops-age`"
+        explanation: "Not correct. Neither field sets decryption."
+    correct_option: a
+    explanation: "Correct. The Secret must be in the same namespace."
+
+  - id: ats097-020-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find why an age key in a Secret is ignored"
+    source_readings:
+      - sections/section-020/module-02/course-01-decryption-in-kustomize-controller.md
+    prompt: "Decryption fails although `sops-age` exists in `flux-system`. Its only key is named `identity.txt`. What is the likely cause?"
+    options:
+      - id: a
+        text: "The Secret must be of type `kubernetes.io/tls`."
+        explanation: "Not correct. A generic Secret works."
+      - id: b
+        text: "The key name must be `sops.vault-token`."
+        explanation: "Not correct. That key is for Vault."
+      - id: c
+        text: "kustomize-controller reads only keys that end in `.agekey` as age identities."
+        explanation: "Correct. Rename the key to end in `.agekey`."
+      - id: d
+        text: "age identities can only be read from a ConfigMap."
+        explanation: "Not correct. They are read from a Secret."
+    correct_option: c
+    explanation: "Correct. Rename the key to end in `.agekey`."
+
+  - id: ats097-020-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Order a key rotation"
+    source_readings:
+      - sections/section-020/module-02/course-02-key-rotation-and-kms.md
+    prompt: "You rotate the age key of a repository without downtime. What comes first?"
+    options:
+      - id: a
+        text: "Remove the old identity from the cluster."
+        explanation: "Not correct. Flux could not decrypt the file in Git."
+      - id: b
+        text: "Delete `.sops.yaml` and commit the file in plain text."
+        explanation: "Not correct. That exposes every value."
+      - id: c
+        text: "Run `sops rotate` with the old identity only."
+        explanation: "Not correct. That does not give the cluster the new key."
+      - id: d
+        text: "Add the new identity to the cluster and the new recipient to the file, keeping the old ones."
+        explanation: "Correct. Every recipient needs a matching identity."
+    correct_option: d
+    explanation: "Correct. Every recipient needs a matching identity."

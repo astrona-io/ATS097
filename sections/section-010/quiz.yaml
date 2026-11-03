@@ -1,0 +1,245 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats097-010
+course_id: ATS097
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-010
+  title: "Secrets In GitOps"
+placement:
+  position: after
+  reading: sections/section-010/capstone/labs/lab-01/question.md
+questions:
+  - id: ats097-010-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain why Base64 does not protect a Secret"
+    source_readings:
+      - sections/section-010/module-01/course-01-why-plain-secrets-cannot-go-to-git.md
+    prompt: "A Secret in a Git repository stores its password under `data` as a Base64 string. What does that protect?"
+    options:
+      - id: a
+        text: "Nothing. Anyone can reverse Base64 with `base64 -d`, because there is no key."
+        explanation: "Correct. Base64 is an encoding, not encryption."
+      - id: b
+        text: "It hides the password from everyone who does not have cluster access."
+        explanation: "Not correct. Anyone who can read the repository can decode the value."
+      - id: c
+        text: "It protects the password as long as the repository is private."
+        explanation: "Not correct. Everyone with read access still decodes it."
+      - id: d
+        text: "It protects the password in Git history but not in the current commit."
+        explanation: "Not correct. Old commits hold the same encoded value."
+    correct_option: a
+    explanation: "Correct. Base64 is an encoding, not encryption."
+
+  - id: ats097-010-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain what happens to a deleted secret file in Git"
+    source_readings:
+      - sections/section-010/module-01/course-01-why-plain-secrets-cannot-go-to-git.md
+    prompt: "Someone deletes `secret.yaml` from the repository in a new commit. Where does the password stay readable?"
+    options:
+      - id: a
+        text: "Nowhere. The deletion commit removes the file from all history."
+        explanation: "Not correct. Older commits keep the file."
+      - id: b
+        text: "In every earlier commit and in every existing clone."
+        explanation: "Correct. A new commit does not change older commits."
+      - id: c
+        text: "Only in the Secret in the cluster."
+        explanation: "Not correct. Git history and clones also keep the value."
+      - id: d
+        text: "Only in the artifact of source-controller."
+        explanation: "Not correct. The old commits and clones are the main exposure."
+    correct_option: b
+    explanation: "Correct. A new commit does not change older commits."
+
+  - id: ats097-010-q03
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Tell `stringData` and `data` apart"
+    source_readings:
+      - sections/section-010/module-01/course-01-why-plain-secrets-cannot-go-to-git.md
+    prompt: "What is the `stringData` field of a Kubernetes Secret?"
+    options:
+      - id: a
+        text: "A field that encrypts the values with a key held by the API server."
+        explanation: "Not correct. `stringData` does no encryption."
+      - id: b
+        text: "A field that only Flux can read."
+        explanation: "Not correct. Anyone who can read the file sees the values."
+      - id: c
+        text: "A write-only field in plain text that the API server converts to Base64 under `data`."
+        explanation: "Correct. The values are still not protected."
+      - id: d
+        text: "A field that Git ignores when it stores the file."
+        explanation: "Not correct. Git stores the whole file."
+    correct_option: c
+    explanation: "Correct. The values are still not protected."
+
+  - id: ats097-010-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Define rotating a secret"
+    source_readings:
+      - sections/section-010/module-01/course-01-why-plain-secrets-cannot-go-to-git.md
+    prompt: "What does rotating a committed secret mean?"
+    options:
+      - id: a
+        text: "Moving the Secret file to a private branch of the repository."
+        explanation: "Not correct. The old value would still be known."
+      - id: b
+        text: "Rewriting Git history to remove the file from every commit."
+        explanation: "Not correct. It does not reach existing copies, so the value must change."
+      - id: c
+        text: "Encoding the old value with Base64 a second time."
+        explanation: "Not correct. That protects nothing."
+      - id: d
+        text: "Creating a new value, giving it to the application and making the old value useless."
+        explanation: "Correct. The old value must stop working."
+    correct_option: d
+    explanation: "Correct. The old value must stop working."
+
+  - id: ats097-010-q05
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe how SOPS stores a Secret in Git"
+    source_readings:
+      - sections/section-010/module-01/course-02-options-for-secrets-in-gitops.md
+    prompt: "How does SOPS store a Secret in Git?"
+    options:
+      - id: a
+        text: "It encrypts the whole file into one unreadable block."
+        explanation: "Not correct. SOPS keeps `kind`, the name and the namespace readable."
+      - id: b
+        text: "It encrypts the values and leaves the keys and the structure readable."
+        explanation: "Correct. A reviewer still sees which Secret changed."
+      - id: c
+        text: "It stores only a reference to a value in a secret store."
+        explanation: "Not correct. That is how External Secrets Operator works."
+      - id: d
+        text: "It stores the values in plain text and encrypts the file name."
+        explanation: "Not correct. The values are the part that is encrypted."
+    correct_option: b
+    explanation: "Correct. A reviewer still sees which Secret changed."
+
+  - id: ats097-010-q06
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain who can decrypt a SealedSecret"
+    source_readings:
+      - sections/section-010/module-01/course-02-options-for-secrets-in-gitops.md
+    prompt: "Who can decrypt a `SealedSecret` that you committed?"
+    options:
+      - id: a
+        text: "Everyone who has the public key that was used to encrypt it."
+        explanation: "Not correct. The public key only encrypts."
+      - id: b
+        text: "kustomize-controller, with a key from a Kubernetes Secret."
+        explanation: "Not correct. That is how SOPS decryption in Flux works."
+      - id: c
+        text: "Only the sealed-secrets controller in the cluster that holds the matching private key."
+        explanation: "Correct. Not even the author can read it back."
+      - id: d
+        text: "Any cluster that runs Flux."
+        explanation: "Not correct. The key belongs to one controller in one cluster."
+    correct_option: c
+    explanation: "Correct. Not even the author can read it back."
+
+  - id: ats097-010-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Identify what External Secrets Operator keeps in Git"
+    source_readings:
+      - sections/section-010/module-01/course-02-options-for-secrets-in-gitops.md
+    prompt: "What does Git hold when a team uses External Secrets Operator?"
+    options:
+      - id: a
+        text: "The value encrypted with an age key."
+        explanation: "Not correct. That is the SOPS approach."
+      - id: b
+        text: "The value encrypted with the key of one controller."
+        explanation: "Not correct. That is the Sealed Secrets approach."
+      - id: c
+        text: "The value in Base64 with a short expiry time."
+        explanation: "Not correct. No value is stored in Git."
+      - id: d
+        text: "An `ExternalSecret` object that names the value to fetch, and never the value itself."
+        explanation: "Correct. The value lives in the external store."
+    correct_option: d
+    explanation: "Correct. The value lives in the external store."
+
+  - id: ats097-010-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the tool that needs no extra controller"
+    source_readings:
+      - sections/section-010/module-01/course-02-options-for-secrets-in-gitops.md
+    prompt: "Which option needs no extra controller in the cluster when you use Flux?"
+    options:
+      - id: a
+        text: "SOPS, because kustomize-controller decrypts the files itself."
+        explanation: "Correct. Flux has SOPS decryption built in."
+      - id: b
+        text: "Sealed Secrets, because Flux holds the key pair."
+        explanation: "Not correct. Sealed Secrets runs its own controller."
+      - id: c
+        text: "External Secrets Operator, because Flux reads the store."
+        explanation: "Not correct. It runs its own controller."
+      - id: d
+        text: "All three, because Flux applies their objects."
+        explanation: "Not correct. Two of them need a controller to create the Secret."
+    correct_option: a
+    explanation: "Correct. Flux has SOPS decryption built in."
+
+  - id: ats097-010-q09
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict what Flux does when a Secret leaves Git"
+    source_readings:
+      - sections/section-010/module-01/course-03-removing-a-committed-secret.md
+    prompt: "The Flux `Kustomization` has `prune: true`. You remove `secret.yaml` from Git and Flux reconciles. What happens to the Secret in the cluster?"
+    options:
+      - id: a
+        text: "Nothing. Flux never deletes a Secret."
+        explanation: "Not correct. Prune deletes every object that left Git."
+      - id: b
+        text: "The Secret keeps its value but turns read-only."
+        explanation: "Not correct. Flux has no such state."
+      - id: c
+        text: "kustomize-controller deletes it, because it is in the inventory but no longer in Git."
+        explanation: "Correct. The inventory is the list of applied objects."
+      - id: d
+        text: "The Secret is moved to the namespace `flux-system`."
+        explanation: "Not correct. Flux does not move objects."
+    correct_option: c
+    explanation: "Correct. The inventory is the list of applied objects."
+
+  - id: ats097-010-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict what happens to new pods without the Secret"
+    source_readings:
+      - sections/section-010/module-01/course-03-removing-a-committed-secret.md
+    prompt: "After the Secret `podinfo-db` is pruned, a new `podinfo` pod starts. What status does it get?"
+    options:
+      - id: a
+        text: "`ImagePullBackOff`, because the image needs the password."
+        explanation: "Not correct. The image pull does not use the Secret."
+      - id: b
+        text: "`Running`, because the old value is cached on the node."
+        explanation: "Not correct. A new container needs the Secret object."
+      - id: c
+        text: "`Completed`, because the pod has nothing to do."
+        explanation: "Not correct. The pod cannot start at all."
+      - id: d
+        text: "`CreateContainerConfigError`, because the kubelet cannot find the Secret."
+        explanation: "Correct. Running pods keep working, new pods wait."
+    correct_option: d
+    explanation: "Correct. Running pods keep working, new pods wait."

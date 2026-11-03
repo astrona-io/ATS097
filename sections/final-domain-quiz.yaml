@@ -1,0 +1,219 @@
+# Final domain knowledge check across all three sections.
+schema_version: 1
+kind: question_bank
+id: ats097-final
+course_id: ATS097
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: domain
+  id: fluxcd-secrets-sops-receivers
+  title: "FluxCD: Secret Management, SOPS & Webhook Receivers"
+questions:
+  - id: ats097-final-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Explain why Base64 does not protect a Secret"
+    source_readings:
+      - sections/section-010/module-01/course-01-why-plain-secrets-cannot-go-to-git.md
+    prompt: "A Secret in a Git repository stores its password under `data` as a Base64 string. What does that protect?"
+    options:
+      - id: a
+        text: "It hides the password from everyone who does not have cluster access."
+        explanation: "Not correct. Anyone who can read the repository can decode the value."
+      - id: b
+        text: "It protects the password as long as the repository is private."
+        explanation: "Not correct. Everyone with read access still decodes it."
+      - id: c
+        text: "Nothing. Anyone can reverse Base64 with `base64 -d`, because there is no key."
+        explanation: "Correct. Base64 is an encoding, not encryption."
+      - id: d
+        text: "It protects the password in Git history but not in the current commit."
+        explanation: "Not correct. Old commits hold the same encoded value."
+    correct_option: c
+    explanation: "Correct. Base64 is an encoding, not encryption."
+
+  - id: ats097-final-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Describe how SOPS stores a Secret in Git"
+    source_readings:
+      - sections/section-010/module-01/course-02-options-for-secrets-in-gitops.md
+    prompt: "How does SOPS store a Secret in Git?"
+    options:
+      - id: a
+        text: "It encrypts the whole file into one unreadable block."
+        explanation: "Not correct. SOPS keeps `kind`, the name and the namespace readable."
+      - id: b
+        text: "It stores only a reference to a value in a secret store."
+        explanation: "Not correct. That is how External Secrets Operator works."
+      - id: c
+        text: "It stores the values in plain text and encrypts the file name."
+        explanation: "Not correct. The values are the part that is encrypted."
+      - id: d
+        text: "It encrypts the values and leaves the keys and the structure readable."
+        explanation: "Correct. A reviewer still sees which Secret changed."
+    correct_option: d
+    explanation: "Correct. A reviewer still sees which Secret changed."
+
+  - id: ats097-final-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict what Flux does when a Secret leaves Git"
+    source_readings:
+      - sections/section-010/module-01/course-03-removing-a-committed-secret.md
+    prompt: "The Flux `Kustomization` has `prune: true`. You remove `secret.yaml` from Git and Flux reconciles. What happens to the Secret in the cluster?"
+    options:
+      - id: a
+        text: "kustomize-controller deletes it, because it is in the inventory but no longer in Git."
+        explanation: "Correct. The inventory is the list of applied objects."
+      - id: b
+        text: "Nothing. Flux never deletes a Secret."
+        explanation: "Not correct. Prune deletes every object that left Git."
+      - id: c
+        text: "The Secret keeps its value but turns read-only."
+        explanation: "Not correct. Flux has no such state."
+      - id: d
+        text: "The Secret is moved to the namespace `flux-system`."
+        explanation: "Not correct. Flux does not move objects."
+    correct_option: a
+    explanation: "Correct. The inventory is the list of applied objects."
+
+  - id: ats097-final-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain what `encrypted_regex` does"
+    source_readings:
+      - sections/section-020/module-01/course-02-encrypting-with-sops.md
+    prompt: "What does `encrypted_regex: ^(data|stringData)$` do in a SOPS creation rule?"
+    options:
+      - id: a
+        text: "It encrypts every key in the file, including the Secret name."
+        explanation: "Not correct. That is what happens without the setting."
+      - id: b
+        text: "It encrypts only the values under `data` and `stringData` and leaves the rest readable."
+        explanation: "Correct. `kind` and `metadata` stay readable."
+      - id: c
+        text: "It limits the rule to files in the folder `secrets/`."
+        explanation: "Not correct. `path_regex` does that."
+      - id: d
+        text: "It names the recipient that the file is encrypted for."
+        explanation: "Not correct. The `age` field does that."
+    correct_option: b
+    explanation: "Correct. `kind` and `metadata` stay readable."
+
+  - id: ats097-final-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Predict the result of editing an encrypted value by hand"
+    source_readings:
+      - sections/section-020/module-01/course-02-encrypting-with-sops.md
+    prompt: "You change the `ENC[...]` text of a value with a text editor and save the file. What happens?"
+    options:
+      - id: a
+        text: "SOPS encrypts the new text the next time it runs."
+        explanation: "Not correct. SOPS does not repair hand edits."
+      - id: b
+        text: "Nothing. SOPS ignores the MAC when the recipient is the same."
+        explanation: "Not correct. The MAC check always runs."
+      - id: c
+        text: "The file is decrypted with the old data key."
+        explanation: "Not correct. The check fails first."
+      - id: d
+        text: "The MAC no longer matches and the file cannot be decrypted."
+        explanation: "Correct. Always edit through `sops`."
+    correct_option: d
+    explanation: "Correct. Always edit through `sops`."
+
+  - id: ats097-final-q06
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Order a key rotation"
+    source_readings:
+      - sections/section-020/module-02/course-02-key-rotation-and-kms.md
+    prompt: "You rotate the age key of a repository without downtime. What comes first?"
+    options:
+      - id: a
+        text: "Add the new identity to the cluster and the new recipient to the file, keeping the old ones."
+        explanation: "Correct. Every recipient needs a matching identity."
+      - id: b
+        text: "Remove the old identity from the cluster."
+        explanation: "Not correct. Flux could not decrypt the file in Git."
+      - id: c
+        text: "Delete `.sops.yaml` and commit the file in plain text."
+        explanation: "Not correct. That exposes every value."
+      - id: d
+        text: "Run `sops rotate` with the old identity only."
+        explanation: "Not correct. That does not give the cluster the new key."
+    correct_option: a
+    explanation: "Correct. Every recipient needs a matching identity."
+
+  - id: ats097-final-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the Receiver type for Gitea"
+    source_readings:
+      - sections/section-030/module-01/course-01-polling-and-receivers.md
+    prompt: "Which `spec.type` do you set on a `Receiver` for Gitea?"
+    options:
+      - id: a
+        text: "`gitea`"
+        explanation: "Not correct. That type does not exist."
+      - id: b
+        text: "`github`, because Gitea sends webhooks in the GitHub format."
+        explanation: "Correct. There is no `gitea` type."
+      - id: c
+        text: "`generic`, because it checks the signature header."
+        explanation: "Not correct. `generic` checks nothing beyond the path."
+      - id: d
+        text: "`gitlab`, because Gitea is compatible with GitLab."
+        explanation: "Not correct. The headers match GitHub, not GitLab."
+    correct_option: b
+    explanation: "Correct. There is no `gitea` type."
+
+  - id: ats097-final-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the reason for a 401 or 403 delivery"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "Gitea shows webhook deliveries with response code `401` or `403`. What is the likely cause?"
+    options:
+      - id: a
+        text: "The interval of the `GitRepository` is too long."
+        explanation: "Not correct. The interval does not affect a webhook request."
+      - id: b
+        text: "The Receiver lists a `Kustomization` instead of a `GitRepository`."
+        explanation: "Not correct. That would not cause a rejected request."
+      - id: c
+        text: "The signature does not match, because the token in Gitea differs from the token in the Secret."
+        explanation: "Correct. Both values must be identical."
+      - id: d
+        text: "The Gitea repository is empty."
+        explanation: "Not correct. An empty repository does not change the response code."
+    correct_option: c
+    explanation: "Correct. Both values must be identical."
+
+  - id: ats097-final-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict the effect of changing the token"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "You change the token in `receiver-token`. What must you do next?"
+    options:
+      - id: a
+        text: "Read `.status.webhookPath` again and update the address and secret in Gitea."
+        explanation: "Correct. The path depends on the token."
+      - id: b
+        text: "Nothing. The old path keeps working."
+        explanation: "Not correct. The path is a hash that includes the token."
+      - id: c
+        text: "Delete the `GitRepository` and create it again."
+        explanation: "Not correct. The source is not involved."
+      - id: d
+        text: "Change the Receiver type to `generic`."
+        explanation: "Not correct. That removes the signature check."
+    correct_option: a
+    explanation: "Correct. The path depends on the token."

@@ -1,0 +1,245 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats097-030
+course_id: ATS097
+exam_code: FLUX
+status: draft
+provenance: Original practice material written for this course; not official exam questions.
+scope:
+  type: section
+  id: section-030
+  title: "Webhook Receivers"
+placement:
+  position: after
+  reading: sections/section-030/capstone/labs/lab-01/question.md
+questions:
+  - id: ats097-030-q01
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "State the cost of a short polling interval"
+    source_readings:
+      - sections/section-030/module-01/course-01-polling-and-receivers.md
+    prompt: "What is the cost of lowering the `GitRepository` interval to one minute so changes arrive sooner?"
+    options:
+      - id: a
+        text: "source-controller asks the Git server sixty times an hour, mostly to learn nothing changed."
+        explanation: "Correct. A webhook avoids this."
+      - id: b
+        text: "Flux stops verifying signatures."
+        explanation: "Not correct. Polling does not use signatures."
+      - id: c
+        text: "kustomize-controller applies changes twice."
+        explanation: "Not correct. It applies only when the source changes."
+      - id: d
+        text: "Git history grows with every fetch."
+        explanation: "Not correct. Fetching does not add commits."
+    correct_option: a
+    explanation: "Correct. A webhook avoids this."
+
+  - id: ats097-030-q02
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the component that serves Receivers"
+    source_readings:
+      - sections/section-030/module-01/course-01-polling-and-receivers.md
+    prompt: "Which component reconciles `Receiver` objects and answers webhook requests?"
+    options:
+      - id: a
+        text: "source-controller, through the Service `source-controller`"
+        explanation: "Not correct. It fetches sources but does not serve webhooks."
+      - id: b
+        text: "notification-controller, through the Service `webhook-receiver`"
+        explanation: "Correct. All Receivers share that Service."
+      - id: c
+        text: "kustomize-controller, through the Service `gitea-http`"
+        explanation: "Not correct. `gitea-http` is the Git server."
+      - id: d
+        text: "helm-controller, through an Ingress"
+        explanation: "Not correct. helm-controller manages Helm releases."
+    correct_option: b
+    explanation: "Correct. All Receivers share that Service."
+
+  - id: ats097-030-q03
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose the Receiver type for Gitea"
+    source_readings:
+      - sections/section-030/module-01/course-01-polling-and-receivers.md
+    prompt: "Which `spec.type` do you set on a `Receiver` for Gitea?"
+    options:
+      - id: a
+        text: "`gitea`"
+        explanation: "Not correct. That type does not exist."
+      - id: b
+        text: "`generic`, because it checks the signature header."
+        explanation: "Not correct. `generic` checks nothing beyond the path."
+      - id: c
+        text: "`github`, because Gitea sends webhooks in the GitHub format."
+        explanation: "Correct. There is no `gitea` type."
+      - id: d
+        text: "`gitlab`, because Gitea is compatible with GitLab."
+        explanation: "Not correct. The headers match GitHub, not GitLab."
+    correct_option: c
+    explanation: "Correct. There is no `gitea` type."
+
+  - id: ats097-030-q04
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain how the webhook path is built"
+    source_readings:
+      - sections/section-030/module-01/course-01-polling-and-receivers.md
+    prompt: "What is in `.status.webhookPath` of a Receiver?"
+    options:
+      - id: a
+        text: "`/hook/` followed by the name of the `GitRepository`."
+        explanation: "Not correct. The path is not guessable from names."
+      - id: b
+        text: "The token in plain text."
+        explanation: "Not correct. The token is never exposed in the path."
+      - id: c
+        text: "A fixed path, the same for every Receiver."
+        explanation: "Not correct. Each Receiver has its own path."
+      - id: d
+        text: "`/hook/` followed by a SHA-256 hash of the token, the Receiver name and its namespace."
+        explanation: "Correct. A new token gives a new path."
+    correct_option: d
+    explanation: "Correct. A new token gives a new path."
+
+  - id: ats097-030-q05
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Explain the HMAC check"
+    source_readings:
+      - sections/section-030/module-01/course-01-polling-and-receivers.md
+    prompt: "How does a `github` type Receiver check that a request comes from the Git server?"
+    options:
+      - id: a
+        text: "It checks the source IP address against the `GitRepository` URL."
+        explanation: "Not correct. Flux does not check addresses."
+      - id: b
+        text: "It computes an HMAC of the body with the shared token and compares it with the signature header."
+        explanation: "Correct. A mismatch is rejected."
+      - id: c
+        text: "It asks source-controller to log in to the Git server."
+        explanation: "Not correct. No such call is made."
+      - id: d
+        text: "It accepts any request on the secret path."
+        explanation: "Not correct. That is how the `generic` type works."
+    correct_option: b
+    explanation: "Correct. A mismatch is rejected."
+
+  - id: ats097-030-q06
+    type: single_choice
+    difficulty: beginner
+    learning_objective: "Name the key a token Secret must have"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "The Receiver uses `spec.secretRef` to name a Secret. Which key must that Secret contain?"
+    options:
+      - id: a
+        text: "`password`"
+        explanation: "Not correct. Receiver reads `token`."
+      - id: b
+        text: "`secret`"
+        explanation: "Not correct. That is the field name in the Gitea webhook."
+      - id: c
+        text: "`token`"
+        explanation: "Correct. It holds the shared random string."
+      - id: d
+        text: "`hmac`"
+        explanation: "Not correct. There is no such key."
+    correct_option: c
+    explanation: "Correct. It holds the shared random string."
+
+  - id: ats097-030-q07
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Find the reason for a 401 or 403 delivery"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "Gitea shows webhook deliveries with response code `401` or `403`. What is the likely cause?"
+    options:
+      - id: a
+        text: "The interval of the `GitRepository` is too long."
+        explanation: "Not correct. The interval does not affect a webhook request."
+      - id: b
+        text: "The Receiver lists a `Kustomization` instead of a `GitRepository`."
+        explanation: "Not correct. That would not cause a rejected request."
+      - id: c
+        text: "The Gitea repository is empty."
+        explanation: "Not correct. An empty repository does not change the response code."
+      - id: d
+        text: "The signature does not match, because the token in Gitea differs from the token in the Secret."
+        explanation: "Correct. Both values must be identical."
+    correct_option: d
+    explanation: "Correct. Both values must be identical."
+
+  - id: ats097-030-q08
+    type: single_choice
+    difficulty: intermediate
+    learning_objective: "Choose what the Receiver reconciles"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "A valid push request arrives at the Receiver `gitea-receiver`. What does notification-controller do?"
+    options:
+      - id: a
+        text: "It reconciles the objects in `spec.resources`, here the `GitRepository` `fleet`."
+        explanation: "Correct. source-controller then fetches the branch at once."
+      - id: b
+        text: "It applies the manifests of the repository itself."
+        explanation: "Not correct. kustomize-controller applies them."
+      - id: c
+        text: "It restarts the pods of `podinfo`."
+        explanation: "Not correct. It only triggers reconciliations."
+      - id: d
+        text: "It changes the interval of the `GitRepository` to one minute."
+        explanation: "Not correct. The interval stays as set."
+    correct_option: a
+    explanation: "Correct. source-controller then fetches the branch at once."
+
+  - id: ats097-030-q09
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Predict the effect of changing the token"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "You change the token in `receiver-token`. What must you do next?"
+    options:
+      - id: a
+        text: "Nothing. The old path keeps working."
+        explanation: "Not correct. The path is a hash that includes the token."
+      - id: b
+        text: "Delete the `GitRepository` and create it again."
+        explanation: "Not correct. The source is not involved."
+      - id: c
+        text: "Read `.status.webhookPath` again and update the address and secret in Gitea."
+        explanation: "Correct. The path depends on the token."
+      - id: d
+        text: "Change the Receiver type to `generic`."
+        explanation: "Not correct. That removes the signature check."
+    correct_option: c
+    explanation: "Correct. The path depends on the token."
+
+  - id: ats097-030-q10
+    type: single_choice
+    difficulty: advanced
+    learning_objective: "Choose where to check first"
+    source_readings:
+      - sections/section-030/module-01/course-02-connecting-gitea-to-a-receiver.md
+    prompt: "A push does not reach the cluster. Where should you check first?"
+    options:
+      - id: a
+        text: "The Flux `Kustomization` only."
+        explanation: "Not correct. It reacts to a source change, so check the source first."
+      - id: b
+        text: "The Kubernetes Secret `sops-age`."
+        explanation: "Not correct. It is used for decryption, not for fetching."
+      - id: c
+        text: "The node-level firewall rules of every worker."
+        explanation: "Not correct. Start with the Receiver and the deliveries."
+      - id: d
+        text: "The Receiver status and the webhook deliveries in Gitea."
+        explanation: "Correct. The source revision shows whether the fetch happened."
+    correct_option: d
+    explanation: "Correct. The source revision shows whether the fetch happened."

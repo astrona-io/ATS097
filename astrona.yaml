@@ -124,6 +124,10 @@ modules:
             url: https://fluxcd.io/flux/guides/mozilla-sops/
           - name: "Kustomization API"
             url: https://fluxcd.io/flux/components/kustomize/kustomizations/
+      - type: quiz
+        title: "Knowledge Check: Secrets In GitOps"
+        path: sections/section-010/quiz.yaml
+        pass_score: 70
 
   - id: module-020
     title: "SOPS With age"
@@ -224,6 +228,10 @@ modules:
             url: https://getsops.io/docs/
           - name: "Manage Kubernetes secrets with SOPS"
             url: https://fluxcd.io/flux/guides/mozilla-sops/
+      - type: quiz
+        title: "Knowledge Check: SOPS With age"
+        path: sections/section-020/quiz.yaml
+        pass_score: 70
 
   - id: module-030
     title: "Webhook Receivers"
@@ -290,3 +298,11 @@ modules:
             url: https://fluxcd.io/flux/components/notification/receivers/
           - name: "Manage Kubernetes secrets with SOPS"
             url: https://fluxcd.io/flux/guides/mozilla-sops/
+      - type: quiz
+        title: "Knowledge Check: Webhook Receivers"
+        path: sections/section-030/quiz.yaml
+        pass_score: 70
+      - type: quiz
+        title: "Final Domain Quiz"
+        path: sections/final-domain-quiz.yaml
+        pass_score: 70
