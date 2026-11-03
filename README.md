@@ -42,17 +42,17 @@ a rotated Secret, reach the cluster within seconds.
 | Module | Reader | Parts | Labs |
 | --- | --- | --- | --- |
 | 010-01 | [Keep Plain Secrets Out Of Git](sections/section-010/module-01/course.md) | 5 | [lab-01](sections/section-010/module-01/labs/lab-01) |
-| 010-02 | [Sealed Secrets With Flux](sections/section-010/module-02/course.md) | 4 | none yet |
-| 010-03 | [External Secrets Operator With Flux](sections/section-010/module-03/course.md) | 4 | none yet |
-| 010-04 | [Secrets That Flux Itself Consumes](sections/section-010/module-04/course.md) | 4 | none yet |
+| 010-02 | [Sealed Secrets With Flux](sections/section-010/module-02/course.md) | 4 | [lab-01](sections/section-010/module-02/labs/lab-01) |
+| 010-03 | [External Secrets Operator With Flux](sections/section-010/module-03/course.md) | 4 | [lab-01](sections/section-010/module-03/labs/lab-01) |
+| 010-04 | [Secrets That Flux Itself Consumes](sections/section-010/module-04/course.md) | 4 | [lab-01](sections/section-010/module-04/labs/lab-01) |
 | 020-01 | [Encrypt Secrets With SOPS And age](sections/section-020/module-01/course.md) | 4 | [lab-01](sections/section-020/module-01/labs/lab-01) |
 | 020-02 | [Let Flux Decrypt Secrets In The Cluster](sections/section-020/module-02/course.md) | 4 | [lab-01](sections/section-020/module-02/labs/lab-01) |
-| 020-03 | [SOPS With KMS And PGP](sections/section-020/module-03/course.md) | 4 | none yet |
-| 020-04 | [SOPS With Helm Values And Tenants](sections/section-020/module-04/course.md) | 4 | none yet |
+| 020-03 | [SOPS With KMS And PGP](sections/section-020/module-03/course.md) | 4 | [lab-01](sections/section-020/module-03/labs/lab-01) |
+| 020-04 | [SOPS With Helm Values And Tenants](sections/section-020/module-04/course.md) | 4 | [lab-01](sections/section-020/module-04/labs/lab-01) |
 | 030-01 | [Reconcile On Push With A Receiver](sections/section-030/module-01/course.md) | 4 | [lab-01](sections/section-030/module-01/labs/lab-01) |
-| 030-02 | [Receiver Types And Request Validation](sections/section-030/module-02/course.md) | 4 | none yet |
-| 030-03 | [Exposing The Receiver To The Internet](sections/section-030/module-03/course.md) | 4 | none yet |
-| 030-04 | [Receivers For Charts, Images And Artifacts](sections/section-030/module-04/course.md) | 4 | none yet |
+| 030-02 | [Receiver Types And Request Validation](sections/section-030/module-02/course.md) | 4 | [lab-01](sections/section-030/module-02/labs/lab-01) |
+| 030-03 | [Exposing The Receiver To The Internet](sections/section-030/module-03/course.md) | 4 | [lab-01](sections/section-030/module-03/labs/lab-01) |
+| 030-04 | [Receivers For Charts, Images And Artifacts](sections/section-030/module-04/course.md) | 4 | [lab-01](sections/section-030/module-04/labs/lab-01) |
 
 ---
 

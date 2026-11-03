@@ -1,0 +1,53 @@
+# Limit Who Can Call The Receiver
+# Astrona graded lab. Schema: internal/config.LabConfig.
+
+metadata:
+  name: "ats-097-lab-030-03"
+  docs:
+    guide: "solution.md"
+    solution: "solution.md"
+    question: "question.md"
+    examQuestion: "question.md"
+    prerequisites: "prerequisites.md"
+bootstrap:
+  init:
+    - name: "install-git-and-flux"
+      description: "Installs flux 2.9.6, sops 3.13.3 and age 1.3.2, Gitea with the repository gitops/fleet, the CoreDNS rewrite and the Flux controllers"
+      type: "file"
+      source: "bootstrap/01-install-git-and-flux.sh"
+    - name: "ats-097-lab-030-03-setup"
+      description: "`flux install` created a network policy `allow-webhooks` in `flux-system` that lets every pod and namespace send requests to notification-controller"
+      type: "file"
+      source: "bootstrap/02-seed-state.sh"
+testing:
+  init:
+    - name: "wait-for-flux"
+      description: "Waits until Gitea and every Flux controller are available"
+      type: "file"
+      source: "testing/wait-for-flux.sh"
+    - name: "reference-solution"
+      description: "The remediation a correct learner performs; used by `astrona test`"
+      type: "file"
+      source: "solution/apply.sh"
+validation:
+  scripts:
+    - name: "validate-open-policy-removed"
+      description: "Confirms the allow-webhooks policy is gone"
+      type: "file"
+      source: "validation/validate-open-policy-removed.sh"
+    - name: "validate-limit-policy"
+      description: "Confirms limit-webhook allows only the namespace gitea on port 9292"
+      type: "file"
+      source: "validation/validate-limit-policy.sh"
+    - name: "validate-git-server-reaches-receiver"
+      description: "Confirms the tester pod in gitea still gets an HTTP answer from the receiver Service"
+      type: "file"
+      source: "validation/validate-git-server-reaches-receiver.sh"
+teardown:
+  keepCluster: false
+runtime:
+  kind:
+    preloadImages:
+      - ghcr.io/stefanprodan/podinfo:6.15.0
+      - gitea/gitea:28.2.0-rootless
+      - nicolaka/netshoot:v0.13

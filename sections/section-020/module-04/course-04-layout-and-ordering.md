@@ -86,3 +86,32 @@ You can now lay out encrypted files by owner and order Secrets before the releas
 > - **Putting the Secret and the HelmRelease in one Kustomization and hoping for order.** Flux applies them together and the release may fail first.
 > - **Naming the folder differently from the rule.** The file is encrypted with the fallback rule or SOPS refuses.
 > - **Using `prune: false` on the secrets Kustomization and then deleting a file.** The Secret stays in the cluster.
+
+## Your mission: Give Each Tenant Its Own Key
+
+You can now do what the graded lab asks. It gives you a cluster with a fault or a missing piece, and you fix it on your own.
+
+The lab runs in its own cluster, so first pause your playground. Nothing in it is lost:
+
+```sh
+astrona stop ats-097-playground-020-04
+```
+
+Then start the lab:
+
+```sh
+astrona run --git ssh://git@github.com/astrona-io/ATS097.git -c sections/section-020/module-04/labs/lab-01
+```
+
+The task is on the next page. Solve it on your own first. When you think you are done, send it for grading:
+
+```sh
+astrona submit -c sections/section-020/module-04/labs/lab-01
+```
+
+When the lab is done, remove it and start your playground again:
+
+```sh
+astrona destroy ats-097-lab-020-04
+astrona start ats-097-playground-020-04
+```

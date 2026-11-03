@@ -52,3 +52,32 @@ You can now create a Receiver as code, keep its token out of plain text, and reb
 > - **Committing the token Secret in plain text.** The Receiver's protection is gone as soon as the token is in history.
 > - **Committing the Receiver without the Secret.** The Receiver stays not ready until the Secret exists.
 > - **Running `flux create receiver` without `--export` and expecting a file.** The object goes straight to the cluster.
+
+## Your mission: Make The Receiver Check Signatures
+
+You can now do what the graded lab asks. It gives you a cluster with a fault or a missing piece, and you fix it on your own.
+
+The lab runs in its own cluster, so first pause your playground. Nothing in it is lost:
+
+```sh
+astrona stop ats-097-playground-030-02
+```
+
+Then start the lab:
+
+```sh
+astrona run --git ssh://git@github.com/astrona-io/ATS097.git -c sections/section-030/module-02/labs/lab-01
+```
+
+The task is on the next page. Solve it on your own first. When you think you are done, send it for grading:
+
+```sh
+astrona submit -c sections/section-030/module-02/labs/lab-01
+```
+
+When the lab is done, remove it and start your playground again:
+
+```sh
+astrona destroy ats-097-lab-030-02
+astrona start ats-097-playground-030-02
+```

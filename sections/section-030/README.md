@@ -14,7 +14,7 @@ In Flux, the object that accepts such a request is a `Receiver`. This section ex
 
 ## The learning path
 
-The section has four modules: reconciling on push with a Receiver, the Receiver types and how they validate requests, exposing the webhook outside the cluster, and Receivers for charts, images and artifacts. Each has a landing page, four or five parts, and a summary. The landing page starts the module's playground. The first module also has a graded lab right after the part it tests.
+The section has four modules: reconciling on push with a Receiver, the Receiver types and how they validate requests, exposing the webhook outside the cluster, and Receivers for charts, images and artifacts. Each has a landing page, four or five parts, and a summary. The landing page starts the module's playground. Every module has a graded lab right after the part it tests: Reconcile On Every Push, Make The Receiver Check Signatures, Limit Who Can Call The Receiver, and One Receiver For Many Sources.
 
 ### 1. Reconcile On Push With A Receiver
 

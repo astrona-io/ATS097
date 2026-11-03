@@ -48,3 +48,32 @@ You can now order the operator with Flux and choose between the tools. The summa
 > - **No `dependsOn` between the operator and the `ExternalSecret` Kustomization.** The first apply fails until the CRDs appear.
 > - **Storing the store key as a plain Secret in Git.** Protect it with SOPS or use workload identity.
 > - **Treating the operator as optional for startup.** Applications that need the Secret fail until it exists.
+
+## Your mission: Read A Secret From A Store
+
+You can now do what the graded lab asks. It gives you a cluster with a fault or a missing piece, and you fix it on your own.
+
+The lab runs in its own cluster, so first pause your playground. Nothing in it is lost:
+
+```sh
+astrona stop ats-097-playground-010-03
+```
+
+Then start the lab:
+
+```sh
+astrona run --git ssh://git@github.com/astrona-io/ATS097.git -c sections/section-010/module-03/labs/lab-01
+```
+
+The task is on the next page. Solve it on your own first. When you think you are done, send it for grading:
+
+```sh
+astrona submit -c sections/section-010/module-03/labs/lab-01
+```
+
+When the lab is done, remove it and start your playground again:
+
+```sh
+astrona destroy ats-097-lab-010-03
+astrona start ats-097-playground-010-03
+```

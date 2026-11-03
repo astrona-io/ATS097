@@ -124,6 +124,26 @@ modules:
         title: "The Controller Key: Rotation And Backup"
         path: sections/section-010/module-02/course-04-the-controller-key-rotation-and-backup.md
       - type: reading
+        title: Question
+        path: sections/section-010/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Seal A Secret With The Controller Lab"
+        path: sections/section-010/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: sealed-secrets
+        task_kind: build
+        tags: [sealed-secrets, kubeseal, helmrelease, sealedsecret, strict-scope, secret-ownership]
+        learning_goals:
+          - Install the Sealed Secrets controller with a HelmRelease
+          - Replace a plain Secret with a SealedSecret without the controller refusing it
+          - Prove the cluster holds the real value while the SealedSecret holds only ciphertext
+        resources:
+          - name: "Sealed Secrets project"
+            url: https://github.com/bitnami-labs/sealed-secrets
+          - name: "HelmRelease API"
+            url: https://fluxcd.io/flux/components/helm/helmreleases/
+      - type: reading
         title: "Summary"
         path: sections/section-010/module-02/course-05-summary.md
       - type: reading
@@ -142,6 +162,26 @@ modules:
         title: "Using It Next To Flux"
         path: sections/section-010/module-03/course-04-using-it-next-to-flux.md
       - type: reading
+        title: Question
+        path: sections/section-010/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Read A Secret From A Store Lab"
+        path: sections/section-010/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: external-secrets
+        task_kind: build
+        tags: [external-secrets, secretstore, externalsecret, fake-provider, refresh-interval, helmrelease]
+        learning_goals:
+          - Install the External Secrets Operator with a HelmRelease
+          - Create a SecretStore and an ExternalSecret that produce a Kubernetes Secret
+          - Prove the Secret follows a change in the store
+        resources:
+          - name: "External Secrets Operator"
+            url: https://external-secrets.io/latest/
+          - name: "Fake provider"
+            url: https://external-secrets.io/latest/provider/fake/
+      - type: reading
         title: "Summary"
         path: sections/section-010/module-03/course-05-summary.md
       - type: reading
@@ -159,6 +199,26 @@ modules:
       - type: reading
         title: "Generated Secrets And Their Limits"
         path: sections/section-010/module-04/course-04-generated-secrets-and-their-limits.md
+      - type: reading
+        title: Question
+        path: sections/section-010/module-04/labs/lab-01/question.md
+      - type: lab
+        title: "Fill A Manifest From A Secret Lab"
+        path: sections/section-010/module-04/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: flux-secrets
+        task_kind: build
+        tags: [postbuild, substitutefrom, secret, kustomization, placeholder, gitops]
+        learning_goals:
+          - Keep a placeholder in Git and the value in a cluster Secret
+          - Turn on postBuild.substituteFrom for a Flux Kustomization
+          - Prove the applied object holds the value while Git holds the placeholder
+        resources:
+          - name: "Kustomization API: postBuild"
+            url: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-variable-substitution
+          - name: "Variable substitution"
+            url: https://fluxcd.io/flux/components/kustomize/kustomizations/
       - type: reading
         title: "Summary"
         path: sections/section-010/module-04/course-05-summary.md
@@ -291,6 +351,26 @@ modules:
         title: "Mixing And Migrating Keys"
         path: sections/section-020/module-03/course-04-mixing-and-migrating-keys.md
       - type: reading
+        title: Question
+        path: sections/section-020/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Add A Backup Recipient To An Encrypted File Lab"
+        path: sections/section-020/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: sops-keys
+        task_kind: migration
+        tags: [sops, age, updatekeys, sops-config, recipients, migration]
+        learning_goals:
+          - Add a second age recipient to the creation rule and to an encrypted file
+          - Use sops updatekeys with the current identity
+          - Prove both identities and Flux can decrypt the file while it stays encrypted in Git
+        resources:
+          - name: "SOPS documentation"
+            url: https://getsops.io/docs/
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/
+      - type: reading
         title: "Summary"
         path: sections/section-020/module-03/course-05-summary.md
       - type: reading
@@ -308,6 +388,26 @@ modules:
       - type: reading
         title: "Layout And Ordering"
         path: sections/section-020/module-04/course-04-layout-and-ordering.md
+      - type: reading
+        title: Question
+        path: sections/section-020/module-04/labs/lab-01/question.md
+      - type: lab
+        title: "Give Each Tenant Its Own Key Lab"
+        path: sections/section-020/module-04/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: sops-tenants
+        task_kind: troubleshooting
+        tags: [sops, age, tenants, kustomization, decryption, sops-age-secret]
+        learning_goals:
+          - Find why one tenant Kustomization cannot decrypt its files
+          - Give that tenant its own decryption Secret instead of sharing a key
+          - Prove each tenant decrypts with its own key and Git still holds only encrypted files
+        resources:
+          - name: "Kustomization API: decryption"
+            url: https://fluxcd.io/flux/components/kustomize/kustomizations/#decryption
+          - name: "Manage Kubernetes secrets with SOPS"
+            url: https://fluxcd.io/flux/guides/mozilla-sops/
       - type: reading
         title: "Summary"
         path: sections/section-020/module-04/course-05-summary.md
@@ -401,6 +501,26 @@ modules:
         title: "Receivers As Code"
         path: sections/section-030/module-02/course-04-receivers-as-code.md
       - type: reading
+        title: Question
+        path: sections/section-030/module-02/labs/lab-01/question.md
+      - type: lab
+        title: "Make The Receiver Check Signatures Lab"
+        path: sections/section-030/module-02/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: receivers
+        task_kind: troubleshooting
+        tags: [receiver, generic-hmac, hmac, signature, webhook, notification-controller]
+        learning_goals:
+          - Find that a generic Receiver accepts any request to its path
+          - Switch the Receiver to the generic-hmac type
+          - Prove a signed request reconciles the source while an unsigned one is rejected
+        resources:
+          - name: "Receiver API"
+            url: https://fluxcd.io/flux/components/notification/receivers/
+          - name: "Setup webhook receivers"
+            url: https://fluxcd.io/flux/guides/webhook-receivers/
+      - type: reading
         title: "Summary"
         path: sections/section-030/module-02/course-05-summary.md
       - type: reading
@@ -419,6 +539,26 @@ modules:
         title: "Debugging Delivery Layer By Layer"
         path: sections/section-030/module-03/course-04-debugging-delivery-layer-by-layer.md
       - type: reading
+        title: Question
+        path: sections/section-030/module-03/labs/lab-01/question.md
+      - type: lab
+        title: "Limit Who Can Call The Receiver Lab"
+        path: sections/section-030/module-03/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: receivers
+        task_kind: build
+        tags: [receiver, networkpolicy, notification-controller, webhook-receiver, ingress, security]
+        learning_goals:
+          - Find the default policy that lets every pod call notification-controller
+          - Replace it with a policy that allows only the Git server namespace on the webhook port
+          - Prove the Git server can still reach the Receiver
+        resources:
+          - name: "Setup webhook receivers"
+            url: https://fluxcd.io/flux/guides/webhook-receivers/
+          - name: "Kubernetes network policies"
+            url: https://kubernetes.io/docs/concepts/services-networking/network-policies/
+      - type: reading
         title: "Summary"
         path: sections/section-030/module-03/course-05-summary.md
       - type: reading
@@ -436,6 +576,26 @@ modules:
       - type: reading
         title: "Many Resources, One Receiver"
         path: sections/section-030/module-04/course-04-many-resources-one-receiver.md
+      - type: reading
+        title: Question
+        path: sections/section-030/module-04/labs/lab-01/question.md
+      - type: lab
+        title: "One Receiver For Many Sources Lab"
+        path: sections/section-030/module-04/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 30m
+        topic: receivers
+        task_kind: build
+        tags: [receiver, matchlabels, helmrepository, gitrepository, generic-hmac, reconcile-annotation]
+        learning_goals:
+          - Select several sources of different kinds with one Receiver
+          - Use matchLabels with a wildcard name
+          - Prove only the labeled sources are reconciled by a signed request
+        resources:
+          - name: "Receiver API: resources"
+            url: https://fluxcd.io/flux/components/notification/receivers/#resources
+          - name: "Setup webhook receivers"
+            url: https://fluxcd.io/flux/guides/webhook-receivers/
       - type: reading
         title: "Summary"
         path: sections/section-030/module-04/course-05-summary.md
