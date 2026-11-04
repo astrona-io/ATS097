@@ -13,7 +13,7 @@
 training:
   id: ATS097
   title: "FluxCD: Secret Management, SOPS & Webhook Receivers"
-  maturity: draft
+  maturity: alpha
   description: >
     Training material covering the Secret Management, SOPS & Webhook
     Receivers domain of the FluxCD training path: why a plain Kubernetes
